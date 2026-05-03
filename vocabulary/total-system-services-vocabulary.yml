@@ -1,0 +1,191 @@
+vocabulary:
+  name: Total System Services (TSYS)
+  description: >-
+    Vocabulary for TSYS (Total System Services) payment processing APIs covering
+    acquiring, card issuing, merchant services, and transaction lifecycle management.
+  version: 1.0.0
+  created: '2026-05-03'
+  modified: '2026-05-03'
+
+terms:
+  - term: Authorization
+    definition: >-
+      The process of requesting approval from a card issuer to reserve funds for
+      a specific transaction amount. Returns an authorization code if approved.
+    domain: Transaction Processing
+    tags:
+      - Payments
+      - Transactions
+
+  - term: Capture
+    definition: >-
+      The process of finalizing an authorized transaction for settlement. Converts
+      a reserved authorization into a billable charge.
+    domain: Transaction Processing
+    tags:
+      - Payments
+      - Transactions
+
+  - term: Settlement
+    definition: >-
+      The process of transferring funds between a merchant's bank and the
+      cardholder's bank after a batch of captured transactions is submitted.
+    domain: Transaction Processing
+    tags:
+      - Payments
+      - Settlement
+
+  - term: Void
+    definition: >-
+      The cancellation of an authorized or captured transaction before it is
+      included in a settlement batch. A voided transaction is never settled.
+    domain: Transaction Processing
+    tags:
+      - Payments
+      - Transactions
+
+  - term: Refund
+    definition: >-
+      A credit transaction that returns funds to a cardholder for a previously
+      settled transaction. Partial or full refunds are supported.
+    domain: Transaction Processing
+    tags:
+      - Payments
+      - Transactions
+
+  - term: Batch
+    definition: >-
+      A collection of captured transactions that are submitted together for
+      settlement at the end of a business day. Closing a batch triggers settlement.
+    domain: Settlement
+    tags:
+      - Payments
+      - Settlement
+
+  - term: Merchant ID
+    definition: >-
+      A unique identifier assigned by TSYS to a merchant that is required in
+      all transaction requests to identify the processing account.
+    domain: Merchant Services
+    tags:
+      - Merchant Services
+
+  - term: Card Program
+    definition: >-
+      A configured card issuing arrangement that defines the terms, controls,
+      and parameters for a portfolio of cards issued by a financial institution.
+    domain: Card Issuing
+    tags:
+      - Card Issuing
+      - Fintech
+
+  - term: Cardholder
+    definition: >-
+      The individual whose name appears on a payment card and who is authorized
+      to use the card for transactions.
+    domain: Card Issuing
+    tags:
+      - Card Issuing
+
+  - term: Spending Controls
+    definition: >-
+      Configuration parameters on a card that restrict spending by amount (daily,
+      monthly, per transaction), merchant category, or geographic region.
+    domain: Card Issuing
+    tags:
+      - Card Issuing
+      - Security
+
+  - term: Dispute
+    definition: >-
+      A cardholder challenge to a transaction they do not recognize or believe
+      is incorrect, also known as a chargeback. Filed through the issuing platform.
+    domain: Card Issuing
+    tags:
+      - Card Issuing
+      - Chargebacks
+
+  - term: AVS
+    definition: >-
+      Address Verification Service: a fraud prevention tool that verifies the
+      billing address provided by the cardholder against the issuer's records.
+    domain: Fraud Prevention
+    tags:
+      - Security
+      - Fraud Prevention
+
+  - term: CVV
+    definition: >-
+      Card Verification Value: a 3 or 4 digit security code on a payment card
+      used to verify card-not-present transactions. Never stored post-authorization.
+    domain: Security
+    tags:
+      - Security
+      - PCI DSS
+
+  - term: PAN Token
+    definition: >-
+      A surrogate value that replaces the Primary Account Number (PAN / card number)
+      to protect sensitive card data and reduce PCI DSS compliance scope.
+    domain: Security
+    tags:
+      - Security
+      - Tokenization
+
+  - term: Virtual Card
+    definition: >-
+      A digitally issued card with a card number, expiration, and CVV but no
+      physical form factor. Used for online payments and B2B virtual card programs.
+    domain: Card Issuing
+    tags:
+      - Card Issuing
+      - Digital Payments
+
+  - term: Acquiring
+    definition: >-
+      The service of processing payment card transactions on behalf of a merchant
+      and facilitating fund transfer from the cardholder's issuing bank.
+    domain: Payment Processing
+    tags:
+      - Acquiring
+      - Merchant Services
+
+  - term: Payment Facilitator
+    definition: >-
+      A company that simplifies the merchant onboarding and payment processing
+      experience by sponsoring sub-merchants under their master merchant account.
+    domain: Merchant Services
+    tags:
+      - Merchant Services
+      - Acquiring
+
+categories:
+  - name: Transaction Processing
+    description: Core payment transaction lifecycle operations
+    terms:
+      - Authorization
+      - Capture
+      - Void
+      - Refund
+      - Settlement
+      - Batch
+  - name: Card Issuing
+    description: Card program and cardholder management concepts
+    terms:
+      - Card Program
+      - Cardholder
+      - Spending Controls
+      - Dispute
+      - Virtual Card
+  - name: Security and Fraud
+    description: Payment security and fraud prevention concepts
+    terms:
+      - AVS
+      - CVV
+      - PAN Token
+  - name: Merchant Services
+    description: Merchant acquiring and service concepts
+    terms:
+      - Merchant ID
+      - Acquiring
+      - Payment Facilitator

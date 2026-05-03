@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://api.tsys.com/schemas/transaction",
+  "title": "Transaction",
+  "description": "A payment transaction processed through the TSYS Payment Gateway",
+  "type": "object",
+  "required": ["id", "merchantId", "status", "amount", "currency"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique transaction identifier"
+    },
+    "merchantId": {
+      "type": "string",
+      "description": "TSYS merchant identifier"
+    },
+    "orderId": {
+      "type": "string",
+      "description": "Merchant-assigned order reference number"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["authorized", "captured", "settled", "voided", "refunded", "declined"],
+      "description": "Current transaction status"
+    },
+    "amount": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Transaction amount"
+    },
+    "settledAmount": {
+      "type": "number",
+      "format": "float",
+      "minimum": 0,
+      "description": "Amount settled after any adjustments"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 currency code"
+    },
+    "cardType": {
+      "type": "string",
+      "enum": ["visa", "mastercard", "amex", "discover", "debit"],
+      "description": "Card network type"
+    },
+    "lastFour": {
+      "type": "string",
+      "pattern": "^[0-9]{4}$",
+      "description": "Last four digits of the card number"
+    },
+    "authorizationCode": {
+      "type": "string",
+      "description": "Authorization code from the card network"
+    },
+    "batchId": {
+      "type": "string",
+      "description": "Settlement batch identifier"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Transaction creation timestamp"
+    },
+    "settledAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Settlement timestamp"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://api.tsys.com/v1/transactions/sale",
+    "headers": {
+      "X-TSYS-API-Key": "{api_key}",
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    "body": {
+      "merchantId": "MERCH_001234",
+      "amount": 49.99,
+      "currency": "USD",
+      "orderId": "ORD-2026-05-003",
+      "card": {
+        "cardNumber": "tok_visa_4111_test",
+        "expirationDate": "1227",
+        "cvv": "123",
+        "cardholderName": "Jane Smith",
+        "billingAddress": {
+          "zip": "85001",
+          "street": "123 Main St"
+        }
+      },
+      "ipAddress": "192.168.1.1",
+      "description": "Online purchase - order ORD-2026-05-003"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "transactionId": "txn_abc12345",
+      "authorizationCode": "AUTH789",
+      "status": "captured",
+      "responseCode": "00",
+      "responseMessage": "Approved",
+      "amount": 49.99,
+      "approvedAmount": 49.99,
+      "avsResponse": "Y",
+      "cvvResponse": "M",
+      "timestamp": "2026-05-03T14:22:31Z"
+    }
+  }
+}

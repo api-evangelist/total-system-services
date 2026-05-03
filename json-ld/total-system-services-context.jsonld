@@ -1,0 +1,60 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "tsys": "https://api.tsys.com/vocab#",
+    "fibo": "https://spec.edmcouncil.org/fibo/ontology/FND/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "Transaction": "schema:PayAction",
+    "id": "@id",
+    "merchantId": "tsys:merchantId",
+    "orderId": "schema:orderNumber",
+    "status": "tsys:transactionStatus",
+    "amount": "schema:totalPrice",
+    "settledAmount": "tsys:settledAmount",
+    "currency": "schema:priceCurrency",
+    "cardType": "tsys:cardNetwork",
+    "lastFour": "tsys:maskedCardNumber",
+    "authorizationCode": "schema:confirmationNumber",
+    "batchId": "tsys:settlementBatch",
+    "createdAt": "schema:startTime",
+    "settledAt": "tsys:settlementDate",
+
+    "Account": "schema:FinancialProduct",
+    "programId": "tsys:cardProgramId",
+    "cardholder": "schema:customer",
+    "availableBalance": "tsys:availableBalance",
+    "creditLimit": "tsys:creditLimit",
+
+    "Card": "tsys:PaymentCard",
+    "accountId": "tsys:relatedAccount",
+    "type": "tsys:cardDeliveryMethod",
+    "network": "tsys:cardNetwork",
+    "expirationDate": "tsys:cardExpiry",
+    "issuedAt": "schema:dateIssued",
+    "activatedAt": "tsys:activationDate",
+
+    "Cardholder": "schema:Person",
+    "firstName": "schema:givenName",
+    "lastName": "schema:familyName",
+    "email": "schema:email",
+    "phone": "schema:telephone",
+    "dateOfBirth": "schema:birthDate",
+    "address": "schema:address",
+
+    "SpendingControls": "tsys:SpendingControls",
+    "dailyLimit": "tsys:dailySpendingLimit",
+    "monthlyLimit": "tsys:monthlySpendingLimit",
+    "transactionLimit": "tsys:perTransactionLimit",
+    "internationalEnabled": "tsys:internationalTransactionsEnabled",
+    "onlineEnabled": "tsys:onlineTransactionsEnabled",
+    "atmEnabled": "tsys:atmWithdrawalsEnabled",
+
+    "Dispute": "tsys:PaymentDispute",
+    "transactionId": "tsys:disputedTransaction",
+    "reason": "tsys:disputeReason",
+    "filedAt": "tsys:disputeFiledDate",
+    "resolvedAt": "tsys:disputeResolvedDate"
+  }
+}

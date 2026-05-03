@@ -1,0 +1,196 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: "TSYS Card Issuing"
+  description: "Workflow capability for financial institutions and fintechs to manage card programs via the TSYS Issuing Platform. Covers cardholder onboarding, card issuance, spending controls, transaction monitoring, and dispute management."
+  tags:
+    - Card Issuing
+    - Cardholder Management
+    - Fintech
+    - Spending Controls
+    - Disputes
+  created: "2026-05-03"
+  modified: "2026-05-03"
+
+binds:
+  - namespace: env
+    keys:
+      TSYS_ISSUING_TOKEN: TSYS_ISSUING_TOKEN
+
+capability:
+  consumes:
+    - import: tsys-issuing
+      location: ./shared/issuing-platform.yaml
+
+  exposes:
+    - type: rest
+      port: 8081
+      namespace: tsys-issuing-api
+      description: "Unified REST API for TSYS card issuing program management."
+      resources:
+        - path: /v1/accounts
+          name: accounts
+          description: "Cardholder account management"
+          operations:
+            - method: GET
+              name: list-accounts
+              description: "List cardholder accounts"
+              call: "tsys-issuing.list-accounts"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: POST
+              name: create-account
+              description: "Create a new account"
+              call: "tsys-issuing.create-account"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/accounts/{accountId}
+          name: account
+          description: "Individual account"
+          operations:
+            - method: GET
+              name: get-account
+              description: "Get account details"
+              call: "tsys-issuing.get-account"
+              with:
+                accountId: "rest.accountId"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/accounts/{accountId}/cards
+          name: account-cards
+          description: "Cards for an account"
+          operations:
+            - method: GET
+              name: list-account-cards
+              description: "List account cards"
+              call: "tsys-issuing.list-account-cards"
+              with:
+                accountId: "rest.accountId"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: POST
+              name: issue-card
+              description: "Issue a new card"
+              call: "tsys-issuing.issue-card"
+              with:
+                accountId: "rest.accountId"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/disputes
+          name: disputes
+          description: "Dispute management"
+          operations:
+            - method: GET
+              name: list-disputes
+              description: "List disputes"
+              call: "tsys-issuing.list-disputes"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: POST
+              name: create-dispute
+              description: "File a dispute"
+              call: "tsys-issuing.create-dispute"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9091
+      namespace: tsys-issuing-mcp
+      transport: http
+      description: "MCP server for AI-assisted TSYS card program management."
+      tools:
+        - name: list-accounts
+          description: "List all cardholder accounts in the card program"
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "tsys-issuing.list-accounts"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: create-cardholder-account
+          description: "Create a new cardholder account in the card program"
+          hints:
+            readOnly: false
+          call: "tsys-issuing.create-account"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-account
+          description: "Get details for a specific cardholder account including balance"
+          hints:
+            readOnly: true
+            idempotent: true
+          call: "tsys-issuing.get-account"
+          with:
+            accountId: "tools.accountId"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: list-account-cards
+          description: "List all cards associated with a cardholder account"
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "tsys-issuing.list-account-cards"
+          with:
+            accountId: "tools.accountId"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: issue-card
+          description: "Issue a new physical or virtual payment card for an account"
+          hints:
+            readOnly: false
+          call: "tsys-issuing.issue-card"
+          with:
+            accountId: "tools.accountId"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-card-spending-controls
+          description: "Get spending limits and restrictions for a card"
+          hints:
+            readOnly: true
+            idempotent: true
+          call: "tsys-issuing.get-card-controls"
+          with:
+            cardId: "tools.cardId"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-card-transactions
+          description: "Get transaction history for a specific card"
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "tsys-issuing.list-card-transactions"
+          with:
+            cardId: "tools.cardId"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: list-disputes
+          description: "List transaction disputes in the card program"
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "tsys-issuing.list-disputes"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: file-dispute
+          description: "File a dispute for a specific card transaction"
+          hints:
+            readOnly: false
+          call: "tsys-issuing.create-dispute"
+          outputParameters:
+            - type: object
+              mapping: "$."

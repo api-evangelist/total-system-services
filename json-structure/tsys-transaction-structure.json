@@ -1,0 +1,86 @@
+{
+  "title": "TSYS Transaction Structure",
+  "description": "JSON structure documentation for the TSYS Payment Gateway Transaction resource",
+  "resource": "Transaction",
+  "api": "TSYS Payment Gateway",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "description": "Unique transaction identifier (system-generated)"
+    },
+    {
+      "name": "merchantId",
+      "type": "string",
+      "required": true,
+      "description": "TSYS-assigned merchant identifier"
+    },
+    {
+      "name": "orderId",
+      "type": "string",
+      "required": false,
+      "description": "Merchant-assigned order reference number for reconciliation"
+    },
+    {
+      "name": "status",
+      "type": "string (enum)",
+      "required": true,
+      "description": "Current transaction lifecycle status: authorized, captured, settled, voided, refunded, declined"
+    },
+    {
+      "name": "amount",
+      "type": "number (float)",
+      "required": true,
+      "description": "Transaction amount in the specified currency"
+    },
+    {
+      "name": "settledAmount",
+      "type": "number (float)",
+      "required": false,
+      "description": "Final settled amount after any partial captures or adjustments"
+    },
+    {
+      "name": "currency",
+      "type": "string (ISO 4217)",
+      "required": true,
+      "description": "Three-letter ISO 4217 currency code (e.g. USD, EUR)"
+    },
+    {
+      "name": "cardType",
+      "type": "string (enum)",
+      "required": false,
+      "description": "Card network: visa, mastercard, amex, discover, debit"
+    },
+    {
+      "name": "lastFour",
+      "type": "string",
+      "required": false,
+      "description": "Last four digits of the card number for display purposes"
+    },
+    {
+      "name": "authorizationCode",
+      "type": "string",
+      "required": false,
+      "description": "Authorization code returned by the card network"
+    },
+    {
+      "name": "batchId",
+      "type": "string",
+      "required": false,
+      "description": "Settlement batch identifier for reconciliation"
+    },
+    {
+      "name": "createdAt",
+      "type": "string (ISO 8601 datetime)",
+      "required": false,
+      "description": "Timestamp when the transaction was initiated"
+    },
+    {
+      "name": "settledAt",
+      "type": "string (ISO 8601 datetime)",
+      "required": false,
+      "description": "Timestamp when the transaction was settled"
+    }
+  ]
+}
