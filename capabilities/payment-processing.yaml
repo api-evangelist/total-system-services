@@ -1,130 +1,276 @@
-naftiko: "1.0.0-alpha1"
-
+naftiko: 1.0.0-alpha2
 info:
-  label: "TSYS Payment Processing"
-  description: "Unified workflow capability for merchant payment processing combining the TSYS Payment Gateway for transaction authorization, capture, void, and refund operations. Designed for merchants, ISVs, and payment facilitators requiring a complete card acceptance workflow."
+  label: TSYS Payment Processing
+  description: Unified workflow capability for merchant payment processing combining the TSYS Payment Gateway for transaction
+    authorization, capture, void, and refund operations. Designed for merchants, ISVs, and payment facilitators requiring
+    a complete card acceptance workflow.
   tags:
-    - Payments
-    - Payment Processing
-    - Merchant Services
-    - Transactions
-    - Credit Card
-  created: "2026-05-03"
-  modified: "2026-05-03"
-
+  - Payments
+  - Payment Processing
+  - Merchant Services
+  - Transactions
+  - Credit Card
+  created: '2026-05-03'
+  modified: '2026-05-06'
 binds:
-  - namespace: env
-    keys:
-      TSYS_API_KEY: TSYS_API_KEY
-
+- namespace: env
+  keys:
+    TSYS_API_KEY: TSYS_API_KEY
 capability:
   consumes:
-    - import: tsys-gateway
-      location: ./shared/payment-gateway.yaml
-
+  - type: http
+    namespace: tsys-gateway
+    baseUri: https://api.tsys.com/v1
+    description: TSYS Payment Gateway API for merchant transaction processing
+    authentication:
+      type: apikey
+      key: X-TSYS-API-Key
+      value: '{{TSYS_API_KEY}}'
+      placement: header
+    resources:
+    - name: authorize
+      path: /transactions/authorize
+      description: Transaction authorization
+      operations:
+      - name: authorize-transaction
+        method: POST
+        description: Authorize a card transaction without capture
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        body:
+          type: json
+          data:
+            merchantId: '{{tools.merchantId}}'
+            amount: '{{tools.amount}}'
+            currency: '{{tools.currency}}'
+    - name: sale
+      path: /transactions/sale
+      description: Sale transaction (auth + capture)
+      operations:
+      - name: process-sale
+        method: POST
+        description: Process a combined authorization and capture sale
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        body:
+          type: json
+          data:
+            merchantId: '{{tools.merchantId}}'
+            amount: '{{tools.amount}}'
+            currency: '{{tools.currency}}'
+    - name: capture
+      path: /transactions/{transactionId}/capture
+      description: Capture authorized transaction
+      operations:
+      - name: capture-transaction
+        method: POST
+        description: Capture a previously authorized transaction
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          required: true
+          description: Transaction ID to capture
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: void
+      path: /transactions/{transactionId}/void
+      description: Void transaction
+      operations:
+      - name: void-transaction
+        method: POST
+        description: Void an authorized or captured transaction
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          required: true
+          description: Transaction ID to void
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: refund
+      path: /transactions/{transactionId}/refund
+      description: Refund transaction
+      operations:
+      - name: refund-transaction
+        method: POST
+        description: Process a full or partial refund
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          required: true
+          description: Transaction ID to refund
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        body:
+          type: json
+          data:
+            amount: '{{tools.amount}}'
+            reason: '{{tools.reason}}'
+    - name: transaction
+      path: /transactions/{transactionId}
+      description: Transaction details
+      operations:
+      - name: get-transaction
+        method: GET
+        description: Get transaction status and details
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          required: true
+          description: Transaction identifier
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: transactions
+      path: /transactions
+      description: Transaction list
+      operations:
+      - name: list-transactions
+        method: GET
+        description: List transactions for the merchant
+        inputParameters:
+        - name: startDate
+          in: query
+          type: string
+          required: false
+          description: Start date filter
+        - name: endDate
+          in: query
+          type: string
+          required: false
+          description: End date filter
+        - name: status
+          in: query
+          type: string
+          required: false
+          description: Status filter
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
   exposes:
-    - type: rest
-      port: 8080
-      namespace: tsys-payments-api
-      description: "Unified REST API for TSYS merchant payment processing."
-      resources:
-        - path: /v1/transactions
-          name: transactions
-          description: "Transaction management"
-          operations:
-            - method: GET
-              name: list-transactions
-              description: "List payment transactions"
-              call: "tsys-gateway.list-transactions"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/transactions/{transactionId}
-          name: transaction
-          description: "Individual transaction"
-          operations:
-            - method: GET
-              name: get-transaction
-              description: "Get transaction status"
-              call: "tsys-gateway.get-transaction"
-              with:
-                transactionId: "rest.transactionId"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-    - type: mcp
-      port: 9090
-      namespace: tsys-payments-mcp
-      transport: http
-      description: "MCP server for AI-assisted TSYS payment processing workflows."
-      tools:
-        - name: authorize-payment
-          description: "Authorize a card payment without capturing funds"
-          hints:
-            readOnly: false
-          call: "tsys-gateway.authorize-transaction"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: process-sale
-          description: "Process a complete card sale (authorization + capture)"
-          hints:
-            readOnly: false
-          call: "tsys-gateway.process-sale"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: capture-payment
-          description: "Capture a previously authorized payment"
-          hints:
-            readOnly: false
-            idempotent: true
-          call: "tsys-gateway.capture-transaction"
-          with:
-            transactionId: "tools.transactionId"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: void-payment
-          description: "Void an authorized or captured payment before settlement"
-          hints:
-            readOnly: false
-            destructive: true
-            idempotent: true
-          call: "tsys-gateway.void-transaction"
-          with:
-            transactionId: "tools.transactionId"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: refund-payment
-          description: "Process a full or partial refund for a settled transaction"
-          hints:
-            readOnly: false
-          call: "tsys-gateway.refund-transaction"
-          with:
-            transactionId: "tools.transactionId"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: get-transaction
-          description: "Look up the status and details of a specific transaction"
-          hints:
-            readOnly: true
-            idempotent: true
-          call: "tsys-gateway.get-transaction"
-          with:
-            transactionId: "tools.transactionId"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: list-transactions
-          description: "List merchant transactions with optional date and status filters"
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "tsys-gateway.list-transactions"
-          outputParameters:
-            - type: object
-              mapping: "$."
+  - type: rest
+    port: 8080
+    namespace: tsys-payments-api
+    description: Unified REST API for TSYS merchant payment processing.
+    resources:
+    - path: /v1/transactions
+      name: transactions
+      description: Transaction management
+      operations:
+      - method: GET
+        name: list-transactions
+        description: List payment transactions
+        call: tsys-gateway.list-transactions
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/transactions/{transactionId}
+      name: transaction
+      description: Individual transaction
+      operations:
+      - method: GET
+        name: get-transaction
+        description: Get transaction status
+        call: tsys-gateway.get-transaction
+        with:
+          transactionId: rest.transactionId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    port: 9090
+    namespace: tsys-payments-mcp
+    transport: http
+    description: MCP server for AI-assisted TSYS payment processing workflows.
+    tools:
+    - name: authorize-payment
+      description: Authorize a card payment without capturing funds
+      hints:
+        readOnly: false
+      call: tsys-gateway.authorize-transaction
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: process-sale
+      description: Process a complete card sale (authorization + capture)
+      hints:
+        readOnly: false
+      call: tsys-gateway.process-sale
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: capture-payment
+      description: Capture a previously authorized payment
+      hints:
+        readOnly: false
+        idempotent: true
+      call: tsys-gateway.capture-transaction
+      with:
+        transactionId: tools.transactionId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: void-payment
+      description: Void an authorized or captured payment before settlement
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: tsys-gateway.void-transaction
+      with:
+        transactionId: tools.transactionId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: refund-payment
+      description: Process a full or partial refund for a settled transaction
+      hints:
+        readOnly: false
+      call: tsys-gateway.refund-transaction
+      with:
+        transactionId: tools.transactionId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-transaction
+      description: Look up the status and details of a specific transaction
+      hints:
+        readOnly: true
+        idempotent: true
+      call: tsys-gateway.get-transaction
+      with:
+        transactionId: tools.transactionId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-transactions
+      description: List merchant transactions with optional date and status filters
+      hints:
+        readOnly: true
+        openWorld: true
+      call: tsys-gateway.list-transactions
+      outputParameters:
+      - type: object
+        mapping: $.
