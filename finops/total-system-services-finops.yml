@@ -1,5 +1,6 @@
 specification: FinOps Framework
 specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
 alignedWith:
   framework: FinOps Foundation Framework
   frameworkUrl: https://www.finops.org/framework/
@@ -8,148 +9,78 @@ alignedWith:
   dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
 provider: Total System Services
 providerId: total-system-services
-publisherName: Total System Services
-serviceCategory: API
+publisherName: Global Payments Inc.
+serviceCategory: Payments Processing
 created: '2026-05-04'
-modified: '2026-05-04'
+modified: '2026-05-05'
+reconciled: false
 tags:
   - Payments
   - Payment Processing
   - Card Issuing
   - Merchant Services
-  - Fintech
-  - Financial Services
   - FinOps
-  - Cost Management
   - FOCUS
-description: FinOps framework definition for the Total System Services API surface. Provides a FOCUS-aligned
-  mapping for cost allocation, usage measurement, and unit-economics reporting across the provider's APIs.
-principles:
-  - name: Visibility
-    description: Make API consumption costs visible to engineering, product, and finance teams in near
-      real-time.
-  - name: Allocation
-    description: Tag every chargeable API call with the consuming team, environment, application, and
-      feature so cost can be allocated.
-  - name: Optimization
-    description: Continuously evaluate request patterns, caching, batching, and tier selection to reduce
-      cost per useful unit of work.
-  - name: Accountability
-    description: Establish budget owners and chargeback or showback flows for each consuming team.
-domains:
-  - name: Understand Usage and Cost
-    capabilities:
-      - Data Ingestion
-      - Allocation
-      - Reporting and Analytics
-      - Anomaly Management
-  - name: Quantify Business Value
-    capabilities:
-      - Planning and Estimating
-      - Forecasting
-      - Budgeting
-      - Benchmarking
-      - Unit Economics
-  - name: Optimize Usage and Cost
-    capabilities:
-      - Architecting for Cloud
-      - Rate Optimization
-      - Workload Optimization
-      - Cloud Sustainability
-      - Licensing and SaaS
-  - name: Manage the FinOps Practice
-    capabilities:
-      - FinOps Practice Operations
-      - FinOps Education and Enablement
-      - Invoicing and Chargeback
-      - Onboarding Workloads
-      - Intersecting Disciplines
+description: 'TSYS (now part of Global Payments) bills processing partners on contracted per-transaction
+  and platform-fee terms. There is no public meter rate card; this artifact describes the structural shape
+  only.'
+sources:
+  - https://www.tsys.com/
+notes: Pricing not publicly retrievable; meters are descriptive and unpriced.
 billingModel:
-  pricingCategory: Usage-Based
+  pricingCategory: Contracted Per-Transaction + Platform Fee
   billingFrequency: Monthly
   billingCurrency: USD
   chargeCategories:
     - Usage
     - Purchase
     - Tax
-    - Credit
     - Adjustment
-  chargeFrequency: Recurring
 focusColumns:
   ServiceName: Total System Services
-  ServiceCategory: Developer Tools / API
+  ServiceCategory: Payments Processing
   ProviderName: Total System Services
-  PublisherName: Total System Services
-  InvoiceIssuerName: Total System Services
-  PricingCategory: Usage-Based
-  PricingUnit: request
+  PublisherName: Global Payments Inc.
+  InvoiceIssuerName: Global Payments Inc.
   BillingCurrency: USD
-  ChargeCategory: Usage
 meters:
-  - name: api_requests
-    description: Count of billable API requests
-    unit: request
+  - name: card_transactions_processed
+    description: Authorizations, captures, refunds, and reversals processed through TSYS Payment Gateway
+      or Merchant Services.
+    unit: transaction
     aggregation: sum
     dimensions:
-      - api
-      - endpoint
-      - tier
+      - card_brand
+      - card_present
       - region
-      - consumer
-  - name: data_egress
-    description: Bytes returned over the network in API responses
-    unit: GB
-    aggregation: sum
+  - name: accounts_on_file
+    description: Cardholder accounts maintained on the TSYS Issuing Platform.
+    unit: account-month
+    aggregation: avg
     dimensions:
-      - api
+      - product
       - region
-      - consumer
-  - name: compute_seconds
-    description: Server-side compute consumed by the request, where applicable
-    unit: second
+  - name: platform_fee
+    description: Monthly platform / connectivity fee separate from per-transaction pricing.
+    unit: month
     aggregation: sum
     dimensions:
-      - api
-      - endpoint
-      - tier
-apis:
-  - name: TSYS Payment Gateway
-    baseURL: ''
-    tags:
-      - Payments
-      - Payment Processing
-      - Credit Card
-      - Transactions
-      - POS
-    serviceName: TSYS Payment Gateway
-    serviceCategory: API
-  - name: TSYS Issuing Platform
-    baseURL: ''
-    tags:
-      - Payments
-      - Card Issuing
-      - Account Management
-      - Digital Payments
-      - Fintech
-    serviceName: TSYS Issuing Platform
-    serviceCategory: API
-  - name: TSYS Merchant Services
-    baseURL: ''
-    tags:
-      - Payments
-      - Merchant Management
-      - Acquiring
-      - Boarding
-      - Settlement
-    serviceName: TSYS Merchant Services
-    serviceCategory: API
-unitEconomics:
-  - name: Cost per 1K Requests
-    metric: billed_cost / (api_requests / 1000)
-    target: TBD
-  - name: Cost per Active Consumer
-    metric: billed_cost / active_consumers
-    target: TBD
+      - service
+principles:
+  - name: Visibility
+    description: Reconcile the monthly TSYS settlement statement against your switch / authorization logs;
+      because rates are tiered by network and volume, line-item detail must be requested from your TSYS
+      relationship manager.
+  - name: Allocation
+    description: Attribute processing fees per card product / merchant-of-record entity. Keep BIN, MID,
+      and chain hierarchy in your COA so chargeback maps to the correct cost center.
+  - name: Optimization
+    description: Routinely review network routing (debit network choice), interchange-optimization data
+      submission quality (Level 2/3), and tier breakpoints to keep the blended take-rate near contract
+      floor.
+  - name: Accountability
+    description: Treasury / payments operations owns reconciliation against TSYS; product owners own
+      issuing-platform fees per program.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
