@@ -1,0 +1,439 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: TSYS Payment Gateway — Transactions
+  description: 'TSYS Payment Gateway — Transactions. 9 operations. Lead operation: Get Current Batch. Self-contained Naftiko
+    capability covering one Total System Services business surface.'
+  tags:
+  - Total System Services
+  - Transactions
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    TOTAL_SYSTEM_SERVICES_API_KEY: TOTAL_SYSTEM_SERVICES_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: tsys-payment-gateway-transactions
+    baseUri: https://api.tsys.com/v1
+    description: TSYS Payment Gateway — Transactions business capability. Self-contained, no shared references.
+    resources:
+    - name: batches-current
+      path: /batches/current
+      operations:
+      - name: getcurrentbatch
+        method: GET
+        description: Get Current Batch
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: batches-current-close
+      path: /batches/current/close
+      operations:
+      - name: closecurrentbatch
+        method: POST
+        description: Close Current Batch
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: transactions
+      path: /transactions
+      operations:
+      - name: listtransactions
+        method: GET
+        description: List Transactions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: startDate
+          in: query
+          type: string
+          description: Filter transactions from this date
+        - name: endDate
+          in: query
+          type: string
+          description: Filter transactions through this date
+        - name: status
+          in: query
+          type: string
+          description: Filter by transaction status
+        - name: cardType
+          in: query
+          type: string
+          description: Filter by card type
+        - name: page
+          in: query
+          type: integer
+        - name: limit
+          in: query
+          type: integer
+    - name: transactions-authorize
+      path: /transactions/authorize
+      operations:
+      - name: authorizetransaction
+        method: POST
+        description: Authorize Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: transactions-sale
+      path: /transactions/sale
+      operations:
+      - name: processsale
+        method: POST
+        description: Process Sale
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: transactions-transactionId
+      path: /transactions/{transactionId}
+      operations:
+      - name: gettransaction
+        method: GET
+        description: Get Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          description: Transaction identifier
+          required: true
+    - name: transactions-transactionId-capture
+      path: /transactions/{transactionId}/capture
+      operations:
+      - name: capturetransaction
+        method: POST
+        description: Capture Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          description: The transaction ID from the authorization response
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: transactions-transactionId-refund
+      path: /transactions/{transactionId}/refund
+      operations:
+      - name: refundtransaction
+        method: POST
+        description: Refund Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          description: The original transaction ID to refund
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: transactions-transactionId-void
+      path: /transactions/{transactionId}/void
+      operations:
+      - name: voidtransaction
+        method: POST
+        description: Void Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          description: The transaction ID to void
+          required: true
+    authentication:
+      type: apikey
+      key: X-TSYS-API-Key
+      value: '{{env.TOTAL_SYSTEM_SERVICES_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: tsys-payment-gateway-transactions-rest
+    port: 8080
+    description: REST adapter for TSYS Payment Gateway — Transactions. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/batches/current
+      name: batches-current
+      description: REST surface for batches-current.
+      operations:
+      - method: GET
+        name: getcurrentbatch
+        description: Get Current Batch
+        call: tsys-payment-gateway-transactions.getcurrentbatch
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/batches/current/close
+      name: batches-current-close
+      description: REST surface for batches-current-close.
+      operations:
+      - method: POST
+        name: closecurrentbatch
+        description: Close Current Batch
+        call: tsys-payment-gateway-transactions.closecurrentbatch
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/transactions
+      name: transactions
+      description: REST surface for transactions.
+      operations:
+      - method: GET
+        name: listtransactions
+        description: List Transactions
+        call: tsys-payment-gateway-transactions.listtransactions
+        with:
+          startDate: rest.startDate
+          endDate: rest.endDate
+          status: rest.status
+          cardType: rest.cardType
+          page: rest.page
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/transactions/authorize
+      name: transactions-authorize
+      description: REST surface for transactions-authorize.
+      operations:
+      - method: POST
+        name: authorizetransaction
+        description: Authorize Transaction
+        call: tsys-payment-gateway-transactions.authorizetransaction
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/transactions/sale
+      name: transactions-sale
+      description: REST surface for transactions-sale.
+      operations:
+      - method: POST
+        name: processsale
+        description: Process Sale
+        call: tsys-payment-gateway-transactions.processsale
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/transactions/{transactionid}
+      name: transactions-transactionid
+      description: REST surface for transactions-transactionId.
+      operations:
+      - method: GET
+        name: gettransaction
+        description: Get Transaction
+        call: tsys-payment-gateway-transactions.gettransaction
+        with:
+          transactionId: rest.transactionId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/transactions/{transactionid}/capture
+      name: transactions-transactionid-capture
+      description: REST surface for transactions-transactionId-capture.
+      operations:
+      - method: POST
+        name: capturetransaction
+        description: Capture Transaction
+        call: tsys-payment-gateway-transactions.capturetransaction
+        with:
+          transactionId: rest.transactionId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/transactions/{transactionid}/refund
+      name: transactions-transactionid-refund
+      description: REST surface for transactions-transactionId-refund.
+      operations:
+      - method: POST
+        name: refundtransaction
+        description: Refund Transaction
+        call: tsys-payment-gateway-transactions.refundtransaction
+        with:
+          transactionId: rest.transactionId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/transactions/{transactionid}/void
+      name: transactions-transactionid-void
+      description: REST surface for transactions-transactionId-void.
+      operations:
+      - method: POST
+        name: voidtransaction
+        description: Void Transaction
+        call: tsys-payment-gateway-transactions.voidtransaction
+        with:
+          transactionId: rest.transactionId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: tsys-payment-gateway-transactions-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for TSYS Payment Gateway — Transactions. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: get-current-batch
+      description: Get Current Batch
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: tsys-payment-gateway-transactions.getcurrentbatch
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: close-current-batch
+      description: Close Current Batch
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-payment-gateway-transactions.closecurrentbatch
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-transactions
+      description: List Transactions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: tsys-payment-gateway-transactions.listtransactions
+      with:
+        startDate: tools.startDate
+        endDate: tools.endDate
+        status: tools.status
+        cardType: tools.cardType
+        page: tools.page
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: authorize-transaction
+      description: Authorize Transaction
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-payment-gateway-transactions.authorizetransaction
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: process-sale
+      description: Process Sale
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-payment-gateway-transactions.processsale
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-transaction
+      description: Get Transaction
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: tsys-payment-gateway-transactions.gettransaction
+      with:
+        transactionId: tools.transactionId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: capture-transaction
+      description: Capture Transaction
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-payment-gateway-transactions.capturetransaction
+      with:
+        transactionId: tools.transactionId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: refund-transaction
+      description: Refund Transaction
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-payment-gateway-transactions.refundtransaction
+      with:
+        transactionId: tools.transactionId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: void-transaction
+      description: Void Transaction
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-payment-gateway-transactions.voidtransaction
+      with:
+        transactionId: tools.transactionId
+      outputParameters:
+      - type: object
+        mapping: $.

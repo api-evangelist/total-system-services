@@ -1,0 +1,289 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: TSYS Issuing Platform — Accounts
+  description: 'TSYS Issuing Platform — Accounts. 6 operations. Lead operation: List Accounts. Self-contained Naftiko capability
+    covering one Total System Services business surface.'
+  tags:
+  - Total System Services
+  - Accounts
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    TOTAL_SYSTEM_SERVICES_API_KEY: TOTAL_SYSTEM_SERVICES_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: tsys-issuing-accounts
+    baseUri: https://issuing.api.tsys.com/v1
+    description: TSYS Issuing Platform — Accounts business capability. Self-contained, no shared references.
+    resources:
+    - name: accounts
+      path: /accounts
+      operations:
+      - name: listaccounts
+        method: GET
+        description: List Accounts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: status
+          in: query
+          type: string
+          description: Filter by account status
+        - name: page
+          in: query
+          type: integer
+        - name: limit
+          in: query
+          type: integer
+      - name: createaccount
+        method: POST
+        description: Create Account
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: accounts-accountId
+      path: /accounts/{accountId}
+      operations:
+      - name: getaccount
+        method: GET
+        description: Get Account
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: accountId
+          in: path
+          type: string
+          description: Cardholder account identifier
+          required: true
+      - name: updateaccount
+        method: PUT
+        description: Update Account
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: accountId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: accounts-accountId-cards
+      path: /accounts/{accountId}/cards
+      operations:
+      - name: listaccountcards
+        method: GET
+        description: List Account Cards
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: accountId
+          in: path
+          type: string
+          required: true
+      - name: issuecard
+        method: POST
+        description: Issue Card
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: accountId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: bearer
+      token: '{{env.TOTAL_SYSTEM_SERVICES_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: tsys-issuing-accounts-rest
+    port: 8080
+    description: REST adapter for TSYS Issuing Platform — Accounts. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/accounts
+      name: accounts
+      description: REST surface for accounts.
+      operations:
+      - method: GET
+        name: listaccounts
+        description: List Accounts
+        call: tsys-issuing-accounts.listaccounts
+        with:
+          status: rest.status
+          page: rest.page
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createaccount
+        description: Create Account
+        call: tsys-issuing-accounts.createaccount
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/accounts/{accountid}
+      name: accounts-accountid
+      description: REST surface for accounts-accountId.
+      operations:
+      - method: GET
+        name: getaccount
+        description: Get Account
+        call: tsys-issuing-accounts.getaccount
+        with:
+          accountId: rest.accountId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateaccount
+        description: Update Account
+        call: tsys-issuing-accounts.updateaccount
+        with:
+          accountId: rest.accountId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/accounts/{accountid}/cards
+      name: accounts-accountid-cards
+      description: REST surface for accounts-accountId-cards.
+      operations:
+      - method: GET
+        name: listaccountcards
+        description: List Account Cards
+        call: tsys-issuing-accounts.listaccountcards
+        with:
+          accountId: rest.accountId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: issuecard
+        description: Issue Card
+        call: tsys-issuing-accounts.issuecard
+        with:
+          accountId: rest.accountId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: tsys-issuing-accounts-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for TSYS Issuing Platform — Accounts. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: list-accounts
+      description: List Accounts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: tsys-issuing-accounts.listaccounts
+      with:
+        status: tools.status
+        page: tools.page
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-account
+      description: Create Account
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-issuing-accounts.createaccount
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-account
+      description: Get Account
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: tsys-issuing-accounts.getaccount
+      with:
+        accountId: tools.accountId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-account
+      description: Update Account
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: tsys-issuing-accounts.updateaccount
+      with:
+        accountId: tools.accountId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-account-cards
+      description: List Account Cards
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: tsys-issuing-accounts.listaccountcards
+      with:
+        accountId: tools.accountId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: issue-card
+      description: Issue Card
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-issuing-accounts.issuecard
+      with:
+        accountId: tools.accountId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

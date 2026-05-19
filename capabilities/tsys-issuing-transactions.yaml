@@ -1,0 +1,101 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: TSYS Issuing Platform — Transactions
+  description: 'TSYS Issuing Platform — Transactions. 1 operations. Lead operation: List Card Transactions. Self-contained
+    Naftiko capability covering one Total System Services business surface.'
+  tags:
+  - Total System Services
+  - Transactions
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    TOTAL_SYSTEM_SERVICES_API_KEY: TOTAL_SYSTEM_SERVICES_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: tsys-issuing-transactions
+    baseUri: https://issuing.api.tsys.com/v1
+    description: TSYS Issuing Platform — Transactions business capability. Self-contained, no shared references.
+    resources:
+    - name: cards-cardId-transactions
+      path: /cards/{cardId}/transactions
+      operations:
+      - name: listcardtransactions
+        method: GET
+        description: List Card Transactions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: cardId
+          in: path
+          type: string
+          required: true
+        - name: startDate
+          in: query
+          type: string
+          description: Start of date range
+        - name: endDate
+          in: query
+          type: string
+          description: End of date range
+        - name: page
+          in: query
+          type: integer
+        - name: limit
+          in: query
+          type: integer
+    authentication:
+      type: bearer
+      token: '{{env.TOTAL_SYSTEM_SERVICES_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: tsys-issuing-transactions-rest
+    port: 8080
+    description: REST adapter for TSYS Issuing Platform — Transactions. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/cards/{cardid}/transactions
+      name: cards-cardid-transactions
+      description: REST surface for cards-cardId-transactions.
+      operations:
+      - method: GET
+        name: listcardtransactions
+        description: List Card Transactions
+        call: tsys-issuing-transactions.listcardtransactions
+        with:
+          cardId: rest.cardId
+          startDate: rest.startDate
+          endDate: rest.endDate
+          page: rest.page
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: tsys-issuing-transactions-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for TSYS Issuing Platform — Transactions. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: list-card-transactions
+      description: List Card Transactions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: tsys-issuing-transactions.listcardtransactions
+      with:
+        cardId: tools.cardId
+        startDate: tools.startDate
+        endDate: tools.endDate
+        page: tools.page
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.

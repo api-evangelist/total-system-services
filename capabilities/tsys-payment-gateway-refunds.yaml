@@ -1,0 +1,89 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: TSYS Payment Gateway — Refunds
+  description: 'TSYS Payment Gateway — Refunds. 1 operations. Lead operation: Refund Transaction. Self-contained Naftiko capability
+    covering one Total System Services business surface.'
+  tags:
+  - Total System Services
+  - Refunds
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    TOTAL_SYSTEM_SERVICES_API_KEY: TOTAL_SYSTEM_SERVICES_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: tsys-payment-gateway-refunds
+    baseUri: https://api.tsys.com/v1
+    description: TSYS Payment Gateway — Refunds business capability. Self-contained, no shared references.
+    resources:
+    - name: transactions-transactionId-refund
+      path: /transactions/{transactionId}/refund
+      operations:
+      - name: refundtransaction
+        method: POST
+        description: Refund Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: transactionId
+          in: path
+          type: string
+          description: The original transaction ID to refund
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    authentication:
+      type: apikey
+      key: X-TSYS-API-Key
+      value: '{{env.TOTAL_SYSTEM_SERVICES_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: tsys-payment-gateway-refunds-rest
+    port: 8080
+    description: REST adapter for TSYS Payment Gateway — Refunds. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/transactions/{transactionid}/refund
+      name: transactions-transactionid-refund
+      description: REST surface for transactions-transactionId-refund.
+      operations:
+      - method: POST
+        name: refundtransaction
+        description: Refund Transaction
+        call: tsys-payment-gateway-refunds.refundtransaction
+        with:
+          transactionId: rest.transactionId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: tsys-payment-gateway-refunds-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for TSYS Payment Gateway — Refunds. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: refund-transaction
+      description: Refund Transaction
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-payment-gateway-refunds.refundtransaction
+      with:
+        transactionId: tools.transactionId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

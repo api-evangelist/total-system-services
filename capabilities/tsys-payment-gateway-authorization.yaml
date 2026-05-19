@@ -1,0 +1,124 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: TSYS Payment Gateway — Authorization
+  description: 'TSYS Payment Gateway — Authorization. 2 operations. Lead operation: Authorize Transaction. Self-contained
+    Naftiko capability covering one Total System Services business surface.'
+  tags:
+  - Total System Services
+  - Authorization
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    TOTAL_SYSTEM_SERVICES_API_KEY: TOTAL_SYSTEM_SERVICES_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: tsys-payment-gateway-authorization
+    baseUri: https://api.tsys.com/v1
+    description: TSYS Payment Gateway — Authorization business capability. Self-contained, no shared references.
+    resources:
+    - name: transactions-authorize
+      path: /transactions/authorize
+      operations:
+      - name: authorizetransaction
+        method: POST
+        description: Authorize Transaction
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: transactions-sale
+      path: /transactions/sale
+      operations:
+      - name: processsale
+        method: POST
+        description: Process Sale
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: X-TSYS-API-Key
+      value: '{{env.TOTAL_SYSTEM_SERVICES_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: tsys-payment-gateway-authorization-rest
+    port: 8080
+    description: REST adapter for TSYS Payment Gateway — Authorization. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/transactions/authorize
+      name: transactions-authorize
+      description: REST surface for transactions-authorize.
+      operations:
+      - method: POST
+        name: authorizetransaction
+        description: Authorize Transaction
+        call: tsys-payment-gateway-authorization.authorizetransaction
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/transactions/sale
+      name: transactions-sale
+      description: REST surface for transactions-sale.
+      operations:
+      - method: POST
+        name: processsale
+        description: Process Sale
+        call: tsys-payment-gateway-authorization.processsale
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: tsys-payment-gateway-authorization-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for TSYS Payment Gateway — Authorization. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: authorize-transaction
+      description: Authorize Transaction
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-payment-gateway-authorization.authorizetransaction
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: process-sale
+      description: Process Sale
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: tsys-payment-gateway-authorization.processsale
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
