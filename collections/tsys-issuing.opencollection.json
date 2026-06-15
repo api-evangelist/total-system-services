@@ -1,0 +1,358 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TSYS Issuing Platform",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://issuing.api.tsys.com/v1/accounts",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by account status"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of cardholder accounts in the program."
+        },
+        {
+          "info": {
+            "name": "Create Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://issuing.api.tsys.com/v1/accounts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new cardholder account in the card program."
+        },
+        {
+          "info": {
+            "name": "Get Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://issuing.api.tsys.com/v1/accounts/:accountId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path",
+                "description": "Cardholder account identifier"
+              }
+            ]
+          },
+          "docs": "Retrieve details for a specific cardholder account."
+        },
+        {
+          "info": {
+            "name": "Update Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://issuing.api.tsys.com/v1/accounts/:accountId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update cardholder account details or status."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Cards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Account Cards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://issuing.api.tsys.com/v1/accounts/:accountId/cards",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List all cards associated with a cardholder account."
+        },
+        {
+          "info": {
+            "name": "Issue Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://issuing.api.tsys.com/v1/accounts/:accountId/cards",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Issue a new physical or virtual card for a cardholder account."
+        },
+        {
+          "info": {
+            "name": "Get Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://issuing.api.tsys.com/v1/cards/:cardId",
+            "params": [
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve details for a specific card."
+        },
+        {
+          "info": {
+            "name": "Activate Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://issuing.api.tsys.com/v1/cards/:cardId/activate",
+            "params": [
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Activate a newly issued card to allow transactions."
+        },
+        {
+          "info": {
+            "name": "Suspend Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://issuing.api.tsys.com/v1/cards/:cardId/suspend",
+            "params": [
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Temporarily suspend a card to block new transactions."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Card Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://issuing.api.tsys.com/v1/cards/:cardId/transactions",
+            "params": [
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range"
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "End of date range"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns transaction history for a specific card."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Controls",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Card Controls",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://issuing.api.tsys.com/v1/cards/:cardId/controls",
+            "params": [
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve spending controls for a specific card."
+        },
+        {
+          "info": {
+            "name": "Update Card Controls",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://issuing.api.tsys.com/v1/cards/:cardId/controls",
+            "params": [
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update spending limits, category restrictions, or geographic controls."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Disputes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Disputes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://issuing.api.tsys.com/v1/disputes",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns a list of transaction disputes."
+        },
+        {
+          "info": {
+            "name": "Create Dispute",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://issuing.api.tsys.com/v1/disputes",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "File a dispute for a specific transaction."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

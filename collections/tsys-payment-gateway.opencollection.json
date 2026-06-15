@@ -1,0 +1,249 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TSYS Payment Gateway",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-TSYS-API-Key",
+      "value": "{{X-TSYS-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authorization",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Authorize Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tsys.com/v1/transactions/authorize",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Authorize a credit, debit, or prepaid card transaction without capturing. Returns an authorization code that can be used to capture the transaction later."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Process Sale",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tsys.com/v1/transactions/sale",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Process a combined authorization and capture (sale) transaction. Charges the card immediately for the full transaction amount."
+        },
+        {
+          "info": {
+            "name": "List Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tsys.com/v1/transactions",
+            "params": [
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "Filter transactions from this date"
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "Filter transactions through this date"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by transaction status"
+              },
+              {
+                "name": "cardType",
+                "value": "",
+                "type": "query",
+                "description": "Filter by card type"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of transactions for the merchant."
+        },
+        {
+          "info": {
+            "name": "Get Current Batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tsys.com/v1/batches/current"
+          },
+          "docs": "Returns the current open batch with pending settlement totals."
+        },
+        {
+          "info": {
+            "name": "Close Current Batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tsys.com/v1/batches/current/close"
+          },
+          "docs": "Close the current batch and submit it for settlement."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Capture",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Capture Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tsys.com/v1/transactions/:transactionId/capture",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The transaction ID from the authorization response"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Capture a previously authorized transaction for settlement."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Voids",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Void Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tsys.com/v1/transactions/:transactionId/void",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The transaction ID to void"
+              }
+            ]
+          },
+          "docs": "Void an authorized or captured transaction before settlement."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Refunds",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Refund Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tsys.com/v1/transactions/:transactionId/refund",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The original transaction ID to refund"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Process a full or partial refund for a settled transaction."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Inquiries",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tsys.com/v1/transactions/:transactionId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction identifier"
+              }
+            ]
+          },
+          "docs": "Retrieve the status and details of a specific transaction."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
