@@ -1,0 +1,22 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/tsys-issuing-openapi.yml, openapi/tsys-payment-gateway-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  sources:
+  - openapi/tsys-issuing-openapi.yml
+- name: apiKeyAuth
+  type: apiKey
+  in: header
+  parameter: X-TSYS-API-Key
+  sources:
+  - openapi/tsys-payment-gateway-openapi.yml
