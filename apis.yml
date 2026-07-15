@@ -53,6 +53,8 @@ apis:
       TSYS Merchant Services API provides merchant boarding, account management, reporting, and settlement services for
       acquirers and payment facilitators integrating with the TSYS acquiring platform.
 common:
+  - type: AgenticAccess
+    url: agentic-access/total-system-services-agentic-access.yml
   - type: DomainSecurity
     url: security/total-system-services-domain-security.yml
   - type: Authentication
