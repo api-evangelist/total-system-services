@@ -1,0 +1,178 @@
+openapi: 3.0.3
+info:
+  title: TSYS Issuing Platform Accounts Inquiries API
+  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  version: 1.0.0
+  contact:
+    name: TSYS Developer Support
+    url: https://www.tsys.com/platform
+servers:
+- url: https://issuing.api.tsys.com/v1
+  description: TSYS Issuing Platform Production API
+security:
+- bearerAuth: []
+tags:
+- name: Inquiries
+  description: Look up transaction status
+paths:
+  /transactions/{transactionId}:
+    get:
+      operationId: getTransaction
+      summary: Get Transaction
+      description: Retrieve the status and details of a specific transaction.
+      tags:
+      - Inquiries
+      parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Transaction identifier
+      responses:
+        '200':
+          description: Transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /transactions:
+    get:
+      operationId: listTransactions
+      summary: List Transactions
+      description: Returns a paginated list of transactions for the merchant.
+      tags:
+      - Inquiries
+      parameters:
+      - name: startDate
+        in: query
+        schema:
+          type: string
+          format: date
+        description: Filter transactions from this date
+      - name: endDate
+        in: query
+        schema:
+          type: string
+          format: date
+        description: Filter transactions through this date
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - authorized
+          - captured
+          - settled
+          - voided
+          - refunded
+          - declined
+        description: Filter by transaction status
+      - name: cardType
+        in: query
+        schema:
+          type: string
+          enum:
+          - visa
+          - mastercard
+          - amex
+          - discover
+          - debit
+        description: Filter by card type
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 50
+          maximum: 500
+      responses:
+        '200':
+          description: Transaction list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionList'
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        merchantId:
+          type: string
+        orderId:
+          type: string
+        status:
+          type: string
+          enum:
+          - authorized
+          - captured
+          - settled
+          - voided
+          - refunded
+          - declined
+        amount:
+          type: number
+          format: float
+        settledAmount:
+          type: number
+          format: float
+        currency:
+          type: string
+        cardType:
+          type: string
+        lastFour:
+          type: string
+          description: Last four digits of the card number
+        authorizationCode:
+          type: string
+        batchId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        settledAt:
+          type: string
+          format: date-time
+    TransactionList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

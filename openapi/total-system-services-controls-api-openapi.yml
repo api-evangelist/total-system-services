@@ -1,0 +1,108 @@
+openapi: 3.0.3
+info:
+  title: TSYS Issuing Platform Accounts Controls API
+  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  version: 1.0.0
+  contact:
+    name: TSYS Developer Support
+    url: https://www.tsys.com/platform
+servers:
+- url: https://issuing.api.tsys.com/v1
+  description: TSYS Issuing Platform Production API
+security:
+- bearerAuth: []
+tags:
+- name: Controls
+  description: Spending controls and limits
+paths:
+  /cards/{cardId}/controls:
+    get:
+      operationId: getCardControls
+      summary: Get Card Controls
+      description: Retrieve spending controls for a specific card.
+      tags:
+      - Controls
+      parameters:
+      - name: cardId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Card controls
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpendingControls'
+    put:
+      operationId: updateCardControls
+      summary: Update Card Controls
+      description: Update spending limits, category restrictions, or geographic controls.
+      tags:
+      - Controls
+      parameters:
+      - name: cardId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpendingControls'
+      responses:
+        '200':
+          description: Controls updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpendingControls'
+components:
+  schemas:
+    SpendingControls:
+      type: object
+      properties:
+        dailyLimit:
+          type: number
+          format: float
+          description: Maximum spend per day
+        monthlyLimit:
+          type: number
+          format: float
+          description: Maximum spend per month
+        transactionLimit:
+          type: number
+          format: float
+          description: Maximum per transaction amount
+        allowedMerchantCategories:
+          type: array
+          items:
+            type: string
+          description: Allowed MCC codes (empty = all allowed)
+        blockedMerchantCategories:
+          type: array
+          items:
+            type: string
+          description: Blocked MCC codes
+        allowedCountries:
+          type: array
+          items:
+            type: string
+          description: ISO 3166-1 alpha-2 country codes
+        internationalEnabled:
+          type: boolean
+          default: false
+        onlineEnabled:
+          type: boolean
+          default: true
+        atmEnabled:
+          type: boolean
+          default: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,362 @@
+openapi: 3.0.3
+info:
+  title: TSYS Issuing Platform Accounts API
+  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  version: 1.0.0
+  contact:
+    name: TSYS Developer Support
+    url: https://www.tsys.com/platform
+servers:
+- url: https://issuing.api.tsys.com/v1
+  description: TSYS Issuing Platform Production API
+security:
+- bearerAuth: []
+tags:
+- name: Accounts
+  description: Cardholder account management
+paths:
+  /accounts:
+    get:
+      operationId: listAccounts
+      summary: List Accounts
+      description: Returns a paginated list of cardholder accounts in the program.
+      tags:
+      - Accounts
+      parameters:
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - active
+          - suspended
+          - closed
+        description: Filter by account status
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 50
+      responses:
+        '200':
+          description: Account list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createAccount
+      summary: Create Account
+      description: Create a new cardholder account in the card program.
+      tags:
+      - Accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountInput'
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /accounts/{accountId}:
+    get:
+      operationId: getAccount
+      summary: Get Account
+      description: Retrieve details for a specific cardholder account.
+      tags:
+      - Accounts
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Cardholder account identifier
+      responses:
+        '200':
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateAccount
+      summary: Update Account
+      description: Update cardholder account details or status.
+      tags:
+      - Accounts
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdate'
+      responses:
+        '200':
+          description: Account updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+  /accounts/{accountId}/cards:
+    get:
+      operationId: listAccountCards
+      summary: List Account Cards
+      description: List all cards associated with a cardholder account.
+      tags:
+      - Accounts
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Cards list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardList'
+    post:
+      operationId: issueCard
+      summary: Issue Card
+      description: Issue a new physical or virtual card for a cardholder account.
+      tags:
+      - Accounts
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardIssuanceRequest'
+      responses:
+        '201':
+          description: Card issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+components:
+  schemas:
+    AccountUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - closed
+        creditLimit:
+          type: number
+          format: float
+    Cardholder:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        address:
+          type: object
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zip:
+              type: string
+            country:
+              type: string
+    AccountInput:
+      type: object
+      required:
+      - cardholder
+      properties:
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+          default: USD
+    CardList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+    AccountList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+    CardIssuanceRequest:
+      type: object
+      required:
+      - type
+      - network
+      properties:
+        type:
+          type: string
+          enum:
+          - physical
+          - virtual
+        network:
+          type: string
+          enum:
+          - visa
+          - mastercard
+        shippingAddress:
+          type: object
+          description: Required for physical cards
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zip:
+              type: string
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    Card:
+      type: object
+      properties:
+        id:
+          type: string
+        accountId:
+          type: string
+        type:
+          type: string
+          enum:
+          - physical
+          - virtual
+        status:
+          type: string
+          enum:
+          - pending
+          - active
+          - suspended
+          - expired
+          - cancelled
+        lastFour:
+          type: string
+        network:
+          type: string
+          enum:
+          - visa
+          - mastercard
+        expirationDate:
+          type: string
+        issuedAt:
+          type: string
+          format: date-time
+        activatedAt:
+          type: string
+          format: date-time
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        programId:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - closed
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        availableBalance:
+          type: number
+          format: float
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

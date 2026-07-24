@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: TSYS Issuing Platform Accounts Disputes API
+  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  version: 1.0.0
+  contact:
+    name: TSYS Developer Support
+    url: https://www.tsys.com/platform
+servers:
+- url: https://issuing.api.tsys.com/v1
+  description: TSYS Issuing Platform Production API
+security:
+- bearerAuth: []
+tags:
+- name: Disputes
+  description: Transaction dispute management
+paths:
+  /disputes:
+    get:
+      operationId: listDisputes
+      summary: List Disputes
+      description: Returns a list of transaction disputes.
+      tags:
+      - Disputes
+      parameters:
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - open
+          - pending
+          - resolved
+          - closed
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 25
+      responses:
+        '200':
+          description: Dispute list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisputeList'
+    post:
+      operationId: createDispute
+      summary: Create Dispute
+      description: File a dispute for a specific transaction.
+      tags:
+      - Disputes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisputeRequest'
+      responses:
+        '201':
+          description: Dispute created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dispute'
+components:
+  schemas:
+    Dispute:
+      type: object
+      properties:
+        id:
+          type: string
+        transactionId:
+          type: string
+        cardId:
+          type: string
+        status:
+          type: string
+          enum:
+          - open
+          - pending
+          - resolved
+          - closed
+        reason:
+          type: string
+        amount:
+          type: number
+          format: float
+        filedAt:
+          type: string
+          format: date-time
+        resolvedAt:
+          type: string
+          format: date-time
+    DisputeRequest:
+      type: object
+      required:
+      - transactionId
+      - reason
+      properties:
+        transactionId:
+          type: string
+        reason:
+          type: string
+          description: Dispute reason description
+        amount:
+          type: number
+          format: float
+          description: Amount being disputed
+    DisputeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dispute'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

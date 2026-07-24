@@ -1,0 +1,93 @@
+openapi: 3.0.3
+info:
+  title: TSYS Issuing Platform Accounts Refunds API
+  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  version: 1.0.0
+  contact:
+    name: TSYS Developer Support
+    url: https://www.tsys.com/platform
+servers:
+- url: https://issuing.api.tsys.com/v1
+  description: TSYS Issuing Platform Production API
+security:
+- bearerAuth: []
+tags:
+- name: Refunds
+  description: Process refunds and credits
+paths:
+  /transactions/{transactionId}/refund:
+    post:
+      operationId: refundTransaction
+      summary: Refund Transaction
+      description: Process a full or partial refund for a settled transaction.
+      tags:
+      - Refunds
+      parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The original transaction ID to refund
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  description: Refund amount (partial or full)
+                reason:
+                  type: string
+                  description: Reason for the refund
+      responses:
+        '200':
+          description: Refund response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    TransactionResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        amount:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

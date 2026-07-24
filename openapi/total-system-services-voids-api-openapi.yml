@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+  title: TSYS Issuing Platform Accounts Voids API
+  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  version: 1.0.0
+  contact:
+    name: TSYS Developer Support
+    url: https://www.tsys.com/platform
+servers:
+- url: https://issuing.api.tsys.com/v1
+  description: TSYS Issuing Platform Production API
+security:
+- bearerAuth: []
+tags:
+- name: Voids
+  description: Void pending transactions
+paths:
+  /transactions/{transactionId}/void:
+    post:
+      operationId: voidTransaction
+      summary: Void Transaction
+      description: Void an authorized or captured transaction before settlement.
+      tags:
+      - Voids
+      parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The transaction ID to void
+      responses:
+        '200':
+          description: Void response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    TransactionResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        amount:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

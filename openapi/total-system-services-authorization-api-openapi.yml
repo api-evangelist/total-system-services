@@ -1,0 +1,203 @@
+openapi: 3.0.3
+info:
+  title: TSYS Issuing Platform Accounts Authorization API
+  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  version: 1.0.0
+  contact:
+    name: TSYS Developer Support
+    url: https://www.tsys.com/platform
+servers:
+- url: https://issuing.api.tsys.com/v1
+  description: TSYS Issuing Platform Production API
+security:
+- bearerAuth: []
+tags:
+- name: Authorization
+  description: Authorize card payments
+paths:
+  /transactions/authorize:
+    post:
+      operationId: authorizeTransaction
+      summary: Authorize Transaction
+      description: Authorize a credit, debit, or prepaid card transaction without capturing. Returns an authorization code that can be used to capture the transaction later.
+      tags:
+      - Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizationRequest'
+      responses:
+        '200':
+          description: Authorization response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /transactions/sale:
+    post:
+      operationId: processSale
+      summary: Process Sale
+      description: Process a combined authorization and capture (sale) transaction. Charges the card immediately for the full transaction amount.
+      tags:
+      - Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaleRequest'
+      responses:
+        '200':
+          description: Sale response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Authentication required or invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    CardData:
+      type: object
+      description: Card payment credentials
+      properties:
+        cardNumber:
+          type: string
+          description: Tokenized card number (PAN token)
+        expirationDate:
+          type: string
+          description: Card expiration date (MMYY format)
+        cvv:
+          type: string
+          description: Card verification value
+        cardholderName:
+          type: string
+        billingAddress:
+          type: object
+          properties:
+            zip:
+              type: string
+            street:
+              type: string
+    AuthorizationRequest:
+      type: object
+      required:
+      - amount
+      - currency
+      - card
+      - merchantId
+      properties:
+        merchantId:
+          type: string
+          description: TSYS merchant ID
+        amount:
+          type: number
+          format: float
+          description: Transaction amount
+        currency:
+          type: string
+          default: USD
+          description: ISO 4217 currency code
+        card:
+          $ref: '#/components/schemas/CardData'
+        orderId:
+          type: string
+          description: Merchant-assigned order identifier
+        description:
+          type: string
+        ipAddress:
+          type: string
+          description: Customer IP address for fraud detection
+    TransactionResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        amount:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+    SaleRequest:
+      allOf:
+      - $ref: '#/components/schemas/AuthorizationRequest'
+      type: object
+      properties:
+        captureImmediately:
+          type: boolean
+          default: true
+    AuthorizationResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        authorizationCode:
+          type: string
+        status:
+          type: string
+          enum:
+          - approved
+          - declined
+          - partial
+          - error
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        amount:
+          type: number
+          format: float
+        approvedAmount:
+          type: number
+          format: float
+        avsResponse:
+          type: string
+          description: Address verification response code
+        cvvResponse:
+          type: string
+          description: CVV match response code
+        timestamp:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
