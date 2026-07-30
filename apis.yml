@@ -1,57 +1,156 @@
 aid: total-system-services
 url: https://raw.githubusercontent.com/api-evangelist/total-system-services/refs/heads/main/apis.yml
 apis:
-  - aid: total-system-services:tsys-payment-gateway
-    name: TSYS Payment Gateway
-    tags:
-      - Payments
-      - Payment Processing
-      - Credit Card
-      - Transactions
-      - POS
-    humanURL: https://developers.tsys.com/
-    properties:
-      - url: https://developers.tsys.com/
-        type: Documentation
-      - url: openapi/tsys-payment-gateway-openapi.yml
-        type: OpenAPI
-    description: >-
-      TSYS Payment Gateway API enables merchants to process credit, debit, and prepaid card transactions. Supports
-      authorization, capture, void, and refund operations for card-present and card-not-present payment scenarios.
-  - aid: total-system-services:tsys-issuing
-    name: TSYS Issuing Platform
-    tags:
-      - Payments
-      - Card Issuing
-      - Account Management
-      - Digital Payments
-      - Fintech
-    humanURL: https://www.tsys.com/platform
-    properties:
-      - url: https://www.tsys.com/platform
-        type: Documentation
-      - url: openapi/tsys-issuing-openapi.yml
-        type: OpenAPI
-    description: >-
-      TSYS Issuing Platform provides an API-driven payment stack for financial institutions and fintechs to issue debit
-      and credit cards, manage cardholder accounts, set spending controls, and handle transaction disputes.
-  - aid: total-system-services:tsys-merchant
-    name: TSYS Merchant Services
-    tags:
-      - Payments
-      - Merchant Management
-      - Acquiring
-      - Boarding
-      - Settlement
-    humanURL: https://docs.tsysmerchant.com/
-    properties:
-      - url: https://docs.tsysmerchant.com/
-        type: Documentation
-      - url: openapi/tsys-merchant-openapi.yml
-        type: OpenAPI
-    description: >-
-      TSYS Merchant Services API provides merchant boarding, account management, reporting, and settlement services for
-      acquirers and payment facilitators integrating with the TSYS acquiring platform.
+- aid: total-system-services:total-system-services-accounts-api
+  name: Total System Services Accounts API
+  description: Cardholder account management
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
+- aid: total-system-services:total-system-services-authorization-api
+  name: Total System Services Authorization API
+  description: Authorize card payments
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Authorization
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-authorization-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
+- aid: total-system-services:total-system-services-capture-api
+  name: Total System Services Capture API
+  description: Capture authorized transactions
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Capture
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-capture-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
+- aid: total-system-services:total-system-services-cards-api
+  name: Total System Services Cards API
+  description: Card lifecycle management
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Cards
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-cards-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
+- aid: total-system-services:total-system-services-controls-api
+  name: Total System Services Controls API
+  description: Spending controls and limits
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Controls
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-controls-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
+- aid: total-system-services:total-system-services-disputes-api
+  name: Total System Services Disputes API
+  description: Transaction dispute management
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Disputes
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-disputes-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
+- aid: total-system-services:total-system-services-inquiries-api
+  name: Total System Services Inquiries API
+  description: Look up transaction status
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Inquiries
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-inquiries-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
+- aid: total-system-services:total-system-services-refunds-api
+  name: Total System Services Refunds API
+  description: Process refunds and credits
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Refunds
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-refunds-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
+- aid: total-system-services:total-system-services-transactions-api
+  name: Total System Services Transactions API
+  description: Card transaction history
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-transactions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
+- aid: total-system-services:total-system-services-voids-api
+  name: Total System Services Voids API
+  description: Void pending transactions
+  humanURL: https://developers.tsys.com/
+  tags:
+  - Voids
+  properties:
+  - type: OpenAPI
+    url: openapi/total-system-services-voids-api-openapi.yml
+  - type: Documentation
+    url: https://developers.tsys.com/
+  - type: Documentation
+    url: https://www.tsys.com/platform
+  - type: Documentation
+    url: https://docs.tsysmerchant.com/
 common:
   - type: AgenticAccess
     url: agentic-access/total-system-services-agentic-access.yml
@@ -85,7 +184,20 @@ tags:
   - Financial Services
   - Fortune 1000
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: enterprise
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Enterprise · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/total-system-services.png
 access: 3rd-Party
 created: '2026-03-24'
 modified: '2026-05-19'
