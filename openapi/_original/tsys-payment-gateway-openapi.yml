@@ -1,0 +1,499 @@
+openapi: 3.0.3
+info:
+  title: TSYS Payment Gateway
+  description: >-
+    TSYS Payment Gateway API for processing credit, debit, and prepaid card
+    transactions. Supports authorization, capture, void, refund, and inquiry
+    operations for card-present (POS) and card-not-present (ecommerce) scenarios.
+    Part of the Global Payments / TSYS payment processing platform.
+  version: 1.0.0
+  contact:
+    name: TSYS Developer Support
+    url: https://developers.tsys.com/
+servers:
+  - url: https://api.tsys.com/v1
+    description: TSYS Payment Gateway Production API
+tags:
+  - name: Transactions
+    description: Process payment transactions
+  - name: Authorization
+    description: Authorize card payments
+  - name: Capture
+    description: Capture authorized transactions
+  - name: Refunds
+    description: Process refunds and credits
+  - name: Voids
+    description: Void pending transactions
+  - name: Inquiries
+    description: Look up transaction status
+paths:
+  /transactions/authorize:
+    post:
+      operationId: authorizeTransaction
+      summary: Authorize Transaction
+      description: >-
+        Authorize a credit, debit, or prepaid card transaction without capturing.
+        Returns an authorization code that can be used to capture the transaction later.
+      tags:
+        - Authorization
+        - Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizationRequest'
+      responses:
+        '200':
+          description: Authorization response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /transactions/sale:
+    post:
+      operationId: processSale
+      summary: Process Sale
+      description: >-
+        Process a combined authorization and capture (sale) transaction. Charges
+        the card immediately for the full transaction amount.
+      tags:
+        - Transactions
+        - Authorization
+        - Capture
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaleRequest'
+      responses:
+        '200':
+          description: Sale response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /transactions/{transactionId}/capture:
+    post:
+      operationId: captureTransaction
+      summary: Capture Transaction
+      description: Capture a previously authorized transaction for settlement.
+      tags:
+        - Capture
+        - Transactions
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The transaction ID from the authorization response
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  description: Amount to capture (must not exceed authorized amount)
+      responses:
+        '200':
+          description: Capture response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /transactions/{transactionId}/void:
+    post:
+      operationId: voidTransaction
+      summary: Void Transaction
+      description: Void an authorized or captured transaction before settlement.
+      tags:
+        - Voids
+        - Transactions
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The transaction ID to void
+      responses:
+        '200':
+          description: Void response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /transactions/{transactionId}/refund:
+    post:
+      operationId: refundTransaction
+      summary: Refund Transaction
+      description: Process a full or partial refund for a settled transaction.
+      tags:
+        - Refunds
+        - Transactions
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The original transaction ID to refund
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  description: Refund amount (partial or full)
+                reason:
+                  type: string
+                  description: Reason for the refund
+      responses:
+        '200':
+          description: Refund response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /transactions/{transactionId}:
+    get:
+      operationId: getTransaction
+      summary: Get Transaction
+      description: Retrieve the status and details of a specific transaction.
+      tags:
+        - Inquiries
+        - Transactions
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Transaction identifier
+      responses:
+        '200':
+          description: Transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /transactions:
+    get:
+      operationId: listTransactions
+      summary: List Transactions
+      description: Returns a paginated list of transactions for the merchant.
+      tags:
+        - Transactions
+        - Inquiries
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter transactions from this date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter transactions through this date
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [authorized, captured, settled, voided, refunded, declined]
+          description: Filter by transaction status
+        - name: cardType
+          in: query
+          schema:
+            type: string
+            enum: [visa, mastercard, amex, discover, debit]
+          description: Filter by card type
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            maximum: 500
+      responses:
+        '200':
+          description: Transaction list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionList'
+  /batches/current:
+    get:
+      operationId: getCurrentBatch
+      summary: Get Current Batch
+      description: Returns the current open batch with pending settlement totals.
+      tags:
+        - Transactions
+      responses:
+        '200':
+          description: Current batch details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Batch'
+  /batches/current/close:
+    post:
+      operationId: closeCurrentBatch
+      summary: Close Current Batch
+      description: Close the current batch and submit it for settlement.
+      tags:
+        - Transactions
+      responses:
+        '200':
+          description: Batch closed for settlement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Batch'
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-TSYS-API-Key
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
+    CardData:
+      type: object
+      description: Card payment credentials
+      properties:
+        cardNumber:
+          type: string
+          description: Tokenized card number (PAN token)
+        expirationDate:
+          type: string
+          description: Card expiration date (MMYY format)
+        cvv:
+          type: string
+          description: Card verification value
+        cardholderName:
+          type: string
+        billingAddress:
+          type: object
+          properties:
+            zip:
+              type: string
+            street:
+              type: string
+    AuthorizationRequest:
+      type: object
+      required:
+        - amount
+        - currency
+        - card
+        - merchantId
+      properties:
+        merchantId:
+          type: string
+          description: TSYS merchant ID
+        amount:
+          type: number
+          format: float
+          description: Transaction amount
+        currency:
+          type: string
+          default: USD
+          description: ISO 4217 currency code
+        card:
+          $ref: '#/components/schemas/CardData'
+        orderId:
+          type: string
+          description: Merchant-assigned order identifier
+        description:
+          type: string
+        ipAddress:
+          type: string
+          description: Customer IP address for fraud detection
+    SaleRequest:
+      allOf:
+        - $ref: '#/components/schemas/AuthorizationRequest'
+      type: object
+      properties:
+        captureImmediately:
+          type: boolean
+          default: true
+    AuthorizationResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        authorizationCode:
+          type: string
+        status:
+          type: string
+          enum: [approved, declined, partial, error]
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        amount:
+          type: number
+          format: float
+        approvedAmount:
+          type: number
+          format: float
+        avsResponse:
+          type: string
+          description: Address verification response code
+        cvvResponse:
+          type: string
+          description: CVV match response code
+        timestamp:
+          type: string
+          format: date-time
+    TransactionResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        amount:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        merchantId:
+          type: string
+        orderId:
+          type: string
+        status:
+          type: string
+          enum: [authorized, captured, settled, voided, refunded, declined]
+        amount:
+          type: number
+          format: float
+        settledAmount:
+          type: number
+          format: float
+        currency:
+          type: string
+        cardType:
+          type: string
+        lastFour:
+          type: string
+          description: Last four digits of the card number
+        authorizationCode:
+          type: string
+        batchId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        settledAt:
+          type: string
+          format: date-time
+    TransactionList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+    Batch:
+      type: object
+      properties:
+        id:
+          type: string
+        merchantId:
+          type: string
+        status:
+          type: string
+          enum: [open, closed, settled]
+        transactionCount:
+          type: integer
+        saleTotal:
+          type: number
+          format: float
+        refundTotal:
+          type: number
+          format: float
+        netTotal:
+          type: number
+          format: float
+        openedAt:
+          type: string
+          format: date-time
+        closedAt:
+          type: string
+          format: date-time
+security:
+  - apiKeyAuth: []

@@ -1,0 +1,681 @@
+openapi: 3.0.3
+info:
+  title: TSYS Issuing Platform
+  description: >-
+    TSYS Issuing Platform API for financial institutions and fintechs to manage
+    card programs, cardholder accounts, card issuance, spending controls, and
+    transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  version: 1.0.0
+  contact:
+    name: TSYS Developer Support
+    url: https://www.tsys.com/platform
+servers:
+  - url: https://issuing.api.tsys.com/v1
+    description: TSYS Issuing Platform Production API
+tags:
+  - name: Accounts
+    description: Cardholder account management
+  - name: Cards
+    description: Card lifecycle management
+  - name: Transactions
+    description: Card transaction history
+  - name: Controls
+    description: Spending controls and limits
+  - name: Disputes
+    description: Transaction dispute management
+paths:
+  /accounts:
+    get:
+      operationId: listAccounts
+      summary: List Accounts
+      description: Returns a paginated list of cardholder accounts in the program.
+      tags:
+        - Accounts
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, suspended, closed]
+          description: Filter by account status
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: Account list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createAccount
+      summary: Create Account
+      description: Create a new cardholder account in the card program.
+      tags:
+        - Accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountInput'
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /accounts/{accountId}:
+    get:
+      operationId: getAccount
+      summary: Get Account
+      description: Retrieve details for a specific cardholder account.
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Cardholder account identifier
+      responses:
+        '200':
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateAccount
+      summary: Update Account
+      description: Update cardholder account details or status.
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdate'
+      responses:
+        '200':
+          description: Account updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+  /accounts/{accountId}/cards:
+    get:
+      operationId: listAccountCards
+      summary: List Account Cards
+      description: List all cards associated with a cardholder account.
+      tags:
+        - Cards
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cards list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardList'
+    post:
+      operationId: issueCard
+      summary: Issue Card
+      description: Issue a new physical or virtual card for a cardholder account.
+      tags:
+        - Cards
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardIssuanceRequest'
+      responses:
+        '201':
+          description: Card issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+  /cards/{cardId}:
+    get:
+      operationId: getCard
+      summary: Get Card
+      description: Retrieve details for a specific card.
+      tags:
+        - Cards
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Card details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /cards/{cardId}/activate:
+    post:
+      operationId: activateCard
+      summary: Activate Card
+      description: Activate a newly issued card to allow transactions.
+      tags:
+        - Cards
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Card activated
+  /cards/{cardId}/suspend:
+    post:
+      operationId: suspendCard
+      summary: Suspend Card
+      description: Temporarily suspend a card to block new transactions.
+      tags:
+        - Cards
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Card suspended
+  /cards/{cardId}/transactions:
+    get:
+      operationId: listCardTransactions
+      summary: List Card Transactions
+      description: Returns transaction history for a specific card.
+      tags:
+        - Transactions
+        - Cards
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Start of date range
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: End of date range
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: Transaction list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuingTransactionList'
+  /cards/{cardId}/controls:
+    get:
+      operationId: getCardControls
+      summary: Get Card Controls
+      description: Retrieve spending controls for a specific card.
+      tags:
+        - Controls
+        - Cards
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Card controls
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpendingControls'
+    put:
+      operationId: updateCardControls
+      summary: Update Card Controls
+      description: Update spending limits, category restrictions, or geographic controls.
+      tags:
+        - Controls
+        - Cards
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpendingControls'
+      responses:
+        '200':
+          description: Controls updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpendingControls'
+  /disputes:
+    get:
+      operationId: listDisputes
+      summary: List Disputes
+      description: Returns a list of transaction disputes.
+      tags:
+        - Disputes
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [open, pending, resolved, closed]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 25
+      responses:
+        '200':
+          description: Dispute list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisputeList'
+    post:
+      operationId: createDispute
+      summary: Create Dispute
+      description: File a dispute for a specific transaction.
+      tags:
+        - Disputes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisputeRequest'
+      responses:
+        '201':
+          description: Dispute created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dispute'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        programId:
+          type: string
+        status:
+          type: string
+          enum: [active, suspended, closed]
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        availableBalance:
+          type: number
+          format: float
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    AccountInput:
+      type: object
+      required:
+        - cardholder
+      properties:
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+          default: USD
+    AccountUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [active, suspended, closed]
+        creditLimit:
+          type: number
+          format: float
+    AccountList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+    Cardholder:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        address:
+          type: object
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zip:
+              type: string
+            country:
+              type: string
+    Card:
+      type: object
+      properties:
+        id:
+          type: string
+        accountId:
+          type: string
+        type:
+          type: string
+          enum: [physical, virtual]
+        status:
+          type: string
+          enum: [pending, active, suspended, expired, cancelled]
+        lastFour:
+          type: string
+        network:
+          type: string
+          enum: [visa, mastercard]
+        expirationDate:
+          type: string
+        issuedAt:
+          type: string
+          format: date-time
+        activatedAt:
+          type: string
+          format: date-time
+    CardIssuanceRequest:
+      type: object
+      required:
+        - type
+        - network
+      properties:
+        type:
+          type: string
+          enum: [physical, virtual]
+        network:
+          type: string
+          enum: [visa, mastercard]
+        shippingAddress:
+          type: object
+          description: Required for physical cards
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zip:
+              type: string
+    CardList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+    IssuingTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+        cardId:
+          type: string
+        type:
+          type: string
+          enum: [purchase, refund, cash_advance, fee]
+        status:
+          type: string
+          enum: [pending, posted, declined]
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        merchantName:
+          type: string
+        merchantCategory:
+          type: string
+        merchantCity:
+          type: string
+        merchantCountry:
+          type: string
+        authorizedAt:
+          type: string
+          format: date-time
+        postedAt:
+          type: string
+          format: date-time
+    IssuingTransactionList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssuingTransaction'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+    SpendingControls:
+      type: object
+      properties:
+        dailyLimit:
+          type: number
+          format: float
+          description: Maximum spend per day
+        monthlyLimit:
+          type: number
+          format: float
+          description: Maximum spend per month
+        transactionLimit:
+          type: number
+          format: float
+          description: Maximum per transaction amount
+        allowedMerchantCategories:
+          type: array
+          items:
+            type: string
+          description: Allowed MCC codes (empty = all allowed)
+        blockedMerchantCategories:
+          type: array
+          items:
+            type: string
+          description: Blocked MCC codes
+        allowedCountries:
+          type: array
+          items:
+            type: string
+          description: ISO 3166-1 alpha-2 country codes
+        internationalEnabled:
+          type: boolean
+          default: false
+        onlineEnabled:
+          type: boolean
+          default: true
+        atmEnabled:
+          type: boolean
+          default: true
+    Dispute:
+      type: object
+      properties:
+        id:
+          type: string
+        transactionId:
+          type: string
+        cardId:
+          type: string
+        status:
+          type: string
+          enum: [open, pending, resolved, closed]
+        reason:
+          type: string
+        amount:
+          type: number
+          format: float
+        filedAt:
+          type: string
+          format: date-time
+        resolvedAt:
+          type: string
+          format: date-time
+    DisputeRequest:
+      type: object
+      required:
+        - transactionId
+        - reason
+      properties:
+        transactionId:
+          type: string
+        reason:
+          type: string
+          description: Dispute reason description
+        amount:
+          type: number
+          format: float
+          description: Amount being disputed
+    DisputeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dispute'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+security:
+  - bearerAuth: []

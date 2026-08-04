@@ -1,0 +1,32 @@
+{
+  "provider": "total-system-services",
+  "sources": [
+    "total-system-services-accounts-api-openapi.yml",
+    "total-system-services-authorization-api-openapi.yml",
+    "total-system-services-capture-api-openapi.yml",
+    "total-system-services-cards-api-openapi.yml",
+    "total-system-services-controls-api-openapi.yml",
+    "total-system-services-disputes-api-openapi.yml",
+    "total-system-services-inquiries-api-openapi.yml",
+    "total-system-services-refunds-api-openapi.yml",
+    "total-system-services-transactions-api-openapi.yml",
+    "total-system-services-voids-api-openapi.yml"
+  ],
+  "outputs": [
+    "total-system-services-accounts-api-openapi.yml",
+    "total-system-services-authorization-api-openapi.yml",
+    "total-system-services-capture-api-openapi.yml",
+    "total-system-services-cards-api-openapi.yml",
+    "total-system-services-controls-api-openapi.yml",
+    "total-system-services-disputes-api-openapi.yml",
+    "total-system-services-inquiries-api-openapi.yml",
+    "total-system-services-refunds-api-openapi.yml",
+    "total-system-services-transactions-api-openapi.yml",
+    "total-system-services-voids-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
