@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TSYS Issuing Platform Accounts Capture API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Capture",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Process Sale",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://issuing.api.tsys.com/v1/transactions/sale",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Process a combined authorization and capture (sale) transaction. Charges the card immediately for the full transaction amount."
+        },
+        {
+          "info": {
+            "name": "Capture Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://issuing.api.tsys.com/v1/transactions/:transactionId/capture",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The transaction ID from the authorization response"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Capture a previously authorized transaction for settlement."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

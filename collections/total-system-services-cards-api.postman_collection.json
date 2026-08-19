@@ -1,0 +1,937 @@
+{
+  "item": [
+    {
+      "id": "2f8bf8b9-3cee-43b7-a978-72e712a5a36a",
+      "name": "Cards",
+      "description": {
+        "content": "Card lifecycle management",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6fcad0df-6e12-4843-8b10-98382c068c71",
+          "name": "List Account Cards",
+          "request": {
+            "name": "List Account Cards",
+            "description": {
+              "content": "List all cards associated with a cardholder account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":accountId",
+                "cards"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "accountId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a28b1d59-adcb-4fcc-b40a-6fb1874a55f2",
+              "name": "Cards list",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":accountId",
+                    "cards"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"accountId\": \"string\",\n      \"type\": \"virtual\",\n      \"status\": \"cancelled\",\n      \"lastFour\": \"string\",\n      \"network\": \"mastercard\",\n      \"expirationDate\": \"string\",\n      \"issuedAt\": \"1984-11-24T12:57:25.606Z\",\n      \"activatedAt\": \"1956-08-24T00:32:07.964Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"accountId\": \"string\",\n      \"type\": \"virtual\",\n      \"status\": \"suspended\",\n      \"lastFour\": \"string\",\n      \"network\": \"mastercard\",\n      \"expirationDate\": \"string\",\n      \"issuedAt\": \"1997-10-19T07:57:10.916Z\",\n      \"activatedAt\": \"2013-12-19T22:07:47.018Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b60147a7-aed3-43ac-b93b-f98b6dd71943",
+          "name": "Issue Card",
+          "request": {
+            "name": "Issue Card",
+            "description": {
+              "content": "Issue a new physical or virtual card for a cardholder account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":accountId",
+                "cards"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "accountId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"<string>\",\n  \"network\": \"<string>\",\n  \"shippingAddress\": {\n    \"street\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"zip\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cde7e66c-f978-48db-be38-4f65bdb75f56",
+              "name": "Card issued",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":accountId",
+                    "cards"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"<string>\",\n  \"network\": \"<string>\",\n  \"shippingAddress\": {\n    \"street\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"zip\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"accountId\": \"string\",\n  \"type\": \"physical\",\n  \"status\": \"pending\",\n  \"lastFour\": \"string\",\n  \"network\": \"mastercard\",\n  \"expirationDate\": \"string\",\n  \"issuedAt\": \"2016-08-09T14:59:41.210Z\",\n  \"activatedAt\": \"1960-02-10T04:28:20.913Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cd0063c8-69bc-4dc3-b35c-ef66207bc02b",
+          "name": "Get Card",
+          "request": {
+            "name": "Get Card",
+            "description": {
+              "content": "Retrieve details for a specific card.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "cards",
+                ":cardId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "cardId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "95de334d-4d61-4acd-bbe8-6132c2cdfb6d",
+              "name": "Card details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cards",
+                    ":cardId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "cardId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"accountId\": \"string\",\n  \"type\": \"physical\",\n  \"status\": \"pending\",\n  \"lastFour\": \"string\",\n  \"network\": \"mastercard\",\n  \"expirationDate\": \"string\",\n  \"issuedAt\": \"2016-08-09T14:59:41.210Z\",\n  \"activatedAt\": \"1960-02-10T04:28:20.913Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "91c52651-f71c-4db4-9369-8d9f5f0e9243",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cards",
+                    ":cardId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "cardId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8490ad02-c1ed-49d0-94a3-267ba2e50b0a",
+          "name": "Activate Card",
+          "request": {
+            "name": "Activate Card",
+            "description": {
+              "content": "Activate a newly issued card to allow transactions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "cards",
+                ":cardId",
+                "activate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "cardId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bdec20c4-c43e-40ef-a853-d3b3e4cb0ccd",
+              "name": "Card activated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cards",
+                    ":cardId",
+                    "activate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "cardId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "948f1339-5039-41e9-a2c9-b664d5491700",
+          "name": "Suspend Card",
+          "request": {
+            "name": "Suspend Card",
+            "description": {
+              "content": "Temporarily suspend a card to block new transactions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "cards",
+                ":cardId",
+                "suspend"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "cardId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "95d30e14-d942-4186-a8bd-7c36ba05b431",
+              "name": "Card suspended",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cards",
+                    ":cardId",
+                    "suspend"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "cardId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5f21be28-2820-4af5-bde5-b213c6a2c3a8",
+          "name": "List Card Transactions",
+          "request": {
+            "name": "List Card Transactions",
+            "description": {
+              "content": "Returns transaction history for a specific card.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "cards",
+                ":cardId",
+                "transactions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "startDate",
+                  "value": "<date>",
+                  "description": "Start of date range"
+                },
+                {
+                  "disabled": false,
+                  "key": "endDate",
+                  "value": "<date>",
+                  "description": "End of date range"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "cardId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e9e0da6d-8702-49c2-9fcc-1208a3128852",
+              "name": "Transaction list",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cards",
+                    ":cardId",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "startDate",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "cardId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"cardId\": \"string\",\n      \"type\": \"refund\",\n      \"status\": \"pending\",\n      \"amount\": 2978.949278668187,\n      \"currency\": \"string\",\n      \"merchantName\": \"string\",\n      \"merchantCategory\": \"string\",\n      \"merchantCity\": \"string\",\n      \"merchantCountry\": \"string\",\n      \"authorizedAt\": \"2002-02-27T05:03:58.766Z\",\n      \"postedAt\": \"2009-09-17T23:07:00.806Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"cardId\": \"string\",\n      \"type\": \"refund\",\n      \"status\": \"posted\",\n      \"amount\": 4779.085640154548,\n      \"currency\": \"string\",\n      \"merchantName\": \"string\",\n      \"merchantCategory\": \"string\",\n      \"merchantCity\": \"string\",\n      \"merchantCountry\": \"string\",\n      \"authorizedAt\": \"2001-04-23T19:38:25.419Z\",\n      \"postedAt\": \"2003-07-27T21:29:05.775Z\"\n    }\n  ],\n  \"total\": 2370,\n  \"page\": 2741,\n  \"limit\": 3548\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "03db94b4-4dc1-4c6a-a5ce-05cdba0b4c1c",
+          "name": "Get Card Controls",
+          "request": {
+            "name": "Get Card Controls",
+            "description": {
+              "content": "Retrieve spending controls for a specific card.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "cards",
+                ":cardId",
+                "controls"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "cardId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c6562bc4-76c7-4f8b-9fd8-8775fb12ef59",
+              "name": "Card controls",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cards",
+                    ":cardId",
+                    "controls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "cardId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"dailyLimit\": 173.62189694388076,\n  \"monthlyLimit\": 7205.15818649883,\n  \"transactionLimit\": 4199.478576922844,\n  \"allowedMerchantCategories\": [\n    \"string\",\n    \"string\"\n  ],\n  \"blockedMerchantCategories\": [\n    \"string\",\n    \"string\"\n  ],\n  \"allowedCountries\": [\n    \"string\",\n    \"string\"\n  ],\n  \"internationalEnabled\": false,\n  \"onlineEnabled\": true,\n  \"atmEnabled\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a8224b99-299c-497d-a2d4-4ef7f61d53dd",
+          "name": "Update Card Controls",
+          "request": {
+            "name": "Update Card Controls",
+            "description": {
+              "content": "Update spending limits, category restrictions, or geographic controls.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "cards",
+                ":cardId",
+                "controls"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "cardId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dailyLimit\": \"<float>\",\n  \"monthlyLimit\": \"<float>\",\n  \"transactionLimit\": \"<float>\",\n  \"allowedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"blockedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"allowedCountries\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"internationalEnabled\": false,\n  \"onlineEnabled\": true,\n  \"atmEnabled\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "903f097c-f80f-45e2-bcae-6bfc57b0e44f",
+              "name": "Controls updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cards",
+                    ":cardId",
+                    "controls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "cardId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"dailyLimit\": \"<float>\",\n  \"monthlyLimit\": \"<float>\",\n  \"transactionLimit\": \"<float>\",\n  \"allowedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"blockedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"allowedCountries\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"internationalEnabled\": false,\n  \"onlineEnabled\": true,\n  \"atmEnabled\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"dailyLimit\": \"<float>\",\n  \"monthlyLimit\": \"<float>\",\n  \"transactionLimit\": \"<float>\",\n  \"allowedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"blockedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"allowedCountries\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"internationalEnabled\": false,\n  \"onlineEnabled\": true,\n  \"atmEnabled\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://issuing.api.tsys.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "04d0fb51-0af8-42d7-a85c-d55694846735",
+    "name": "TSYS Issuing Platform Accounts Cards API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.\n\nContact Support:\n Name: TSYS Developer Support",
+      "type": "text/plain"
+    }
+  }
+}

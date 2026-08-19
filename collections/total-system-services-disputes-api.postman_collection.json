@@ -1,0 +1,247 @@
+{
+  "item": [
+    {
+      "id": "017d70ba-9e9a-4530-928b-4e45d7a1af1d",
+      "name": "Disputes",
+      "description": {
+        "content": "Transaction dispute management",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d706c4cb-2919-47a8-a0eb-b2e9f2a5e167",
+          "name": "List Disputes",
+          "request": {
+            "name": "List Disputes",
+            "description": {
+              "content": "Returns a list of transaction disputes.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "disputes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4f681a89-c032-431e-aead-349e9630b195",
+              "name": "Dispute list",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "disputes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"transactionId\": \"string\",\n      \"cardId\": \"string\",\n      \"status\": \"closed\",\n      \"reason\": \"string\",\n      \"amount\": 9402.823979427585,\n      \"filedAt\": \"1971-03-16T16:18:06.760Z\",\n      \"resolvedAt\": \"1959-11-05T10:38:03.325Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"transactionId\": \"string\",\n      \"cardId\": \"string\",\n      \"status\": \"open\",\n      \"reason\": \"string\",\n      \"amount\": 7152.245004033969,\n      \"filedAt\": \"1951-11-18T17:19:02.689Z\",\n      \"resolvedAt\": \"1979-12-05T02:08:28.920Z\"\n    }\n  ],\n  \"total\": 32,\n  \"page\": 2496,\n  \"limit\": 5701\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3fcc2d75-a968-4042-94f0-ef8c4b64b797",
+          "name": "Create Dispute",
+          "request": {
+            "name": "Create Dispute",
+            "description": {
+              "content": "File a dispute for a specific transaction.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "disputes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionId\": \"<string>\",\n  \"reason\": \"<string>\",\n  \"amount\": \"<float>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "af3fbcd6-0ba3-4506-95a5-23f6506f0c60",
+              "name": "Dispute created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "disputes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transactionId\": \"<string>\",\n  \"reason\": \"<string>\",\n  \"amount\": \"<float>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"transactionId\": \"string\",\n  \"cardId\": \"string\",\n  \"status\": \"pending\",\n  \"reason\": \"string\",\n  \"amount\": 6673.917424037158,\n  \"filedAt\": \"1989-10-25T16:33:33.453Z\",\n  \"resolvedAt\": \"1951-11-10T18:46:09.504Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://issuing.api.tsys.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "784fe1cf-0aa4-4bef-a04e-fcc58b62b63c",
+    "name": "TSYS Issuing Platform Accounts Disputes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.\n\nContact Support:\n Name: TSYS Developer Support",
+      "type": "text/plain"
+    }
+  }
+}

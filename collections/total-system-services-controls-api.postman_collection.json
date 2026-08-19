@@ -1,0 +1,258 @@
+{
+  "item": [
+    {
+      "id": "4db26871-6184-4665-b5a9-6d4467af350c",
+      "name": "Controls",
+      "description": {
+        "content": "Spending controls and limits",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3d4ab737-d3f6-4cb0-88fa-ef665ed701f3",
+          "name": "Get Card Controls",
+          "request": {
+            "name": "Get Card Controls",
+            "description": {
+              "content": "Retrieve spending controls for a specific card.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "cards",
+                ":cardId",
+                "controls"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "cardId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "eead9104-f6a9-4714-93a0-a6957f2f4d0b",
+              "name": "Card controls",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cards",
+                    ":cardId",
+                    "controls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "cardId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"dailyLimit\": 1019.0635305477414,\n  \"monthlyLimit\": 4665.657555527671,\n  \"transactionLimit\": 2776.7146954222767,\n  \"allowedMerchantCategories\": [\n    \"string\",\n    \"string\"\n  ],\n  \"blockedMerchantCategories\": [\n    \"string\",\n    \"string\"\n  ],\n  \"allowedCountries\": [\n    \"string\",\n    \"string\"\n  ],\n  \"internationalEnabled\": false,\n  \"onlineEnabled\": true,\n  \"atmEnabled\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8b61c98a-c54d-4931-9ec5-f08c30a247f0",
+          "name": "Update Card Controls",
+          "request": {
+            "name": "Update Card Controls",
+            "description": {
+              "content": "Update spending limits, category restrictions, or geographic controls.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "cards",
+                ":cardId",
+                "controls"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "cardId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dailyLimit\": \"<float>\",\n  \"monthlyLimit\": \"<float>\",\n  \"transactionLimit\": \"<float>\",\n  \"allowedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"blockedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"allowedCountries\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"internationalEnabled\": false,\n  \"onlineEnabled\": true,\n  \"atmEnabled\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f7257a4c-2151-4541-9f9e-9ee7f3f6779a",
+              "name": "Controls updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "cards",
+                    ":cardId",
+                    "controls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "cardId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"dailyLimit\": \"<float>\",\n  \"monthlyLimit\": \"<float>\",\n  \"transactionLimit\": \"<float>\",\n  \"allowedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"blockedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"allowedCountries\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"internationalEnabled\": false,\n  \"onlineEnabled\": true,\n  \"atmEnabled\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"dailyLimit\": \"<float>\",\n  \"monthlyLimit\": \"<float>\",\n  \"transactionLimit\": \"<float>\",\n  \"allowedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"blockedMerchantCategories\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"allowedCountries\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"internationalEnabled\": false,\n  \"onlineEnabled\": true,\n  \"atmEnabled\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://issuing.api.tsys.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "93f94e63-c6bf-413b-a993-a47fe131feff",
+    "name": "TSYS Issuing Platform Accounts Controls API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.\n\nContact Support:\n Name: TSYS Developer Support",
+      "type": "text/plain"
+    }
+  }
+}

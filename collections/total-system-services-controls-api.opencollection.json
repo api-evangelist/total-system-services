@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TSYS Issuing Platform Accounts Controls API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Controls",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Card Controls",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://issuing.api.tsys.com/v1/cards/:cardId/controls",
+            "params": [
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve spending controls for a specific card."
+        },
+        {
+          "info": {
+            "name": "Update Card Controls",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://issuing.api.tsys.com/v1/cards/:cardId/controls",
+            "params": [
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update spending limits, category restrictions, or geographic controls."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

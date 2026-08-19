@@ -1,0 +1,451 @@
+{
+  "item": [
+    {
+      "id": "2a6d9517-f2a1-484c-a29d-68c768c325fd",
+      "name": "Authorization",
+      "description": {
+        "content": "Authorize card payments",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "08047843-23f5-471e-9ea2-4b0e15874ca6",
+          "name": "Authorize Transaction",
+          "request": {
+            "name": "Authorize Transaction",
+            "description": {
+              "content": "Authorize a credit, debit, or prepaid card transaction without capturing. Returns an authorization code that can be used to capture the transaction later.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "transactions",
+                "authorize"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"<float>\",\n  \"currency\": \"USD\",\n  \"card\": {\n    \"cardNumber\": \"<string>\",\n    \"expirationDate\": \"<string>\",\n    \"cvv\": \"<string>\",\n    \"cardholderName\": \"<string>\",\n    \"billingAddress\": {\n      \"zip\": \"<string>\",\n      \"street\": \"<string>\"\n    }\n  },\n  \"merchantId\": \"<string>\",\n  \"orderId\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ipAddress\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "75987abb-bc0e-41d4-a9ff-5863a70c7464",
+              "name": "Authorization response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "authorize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"<float>\",\n  \"currency\": \"USD\",\n  \"card\": {\n    \"cardNumber\": \"<string>\",\n    \"expirationDate\": \"<string>\",\n    \"cvv\": \"<string>\",\n    \"cardholderName\": \"<string>\",\n    \"billingAddress\": {\n      \"zip\": \"<string>\",\n      \"street\": \"<string>\"\n    }\n  },\n  \"merchantId\": \"<string>\",\n  \"orderId\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ipAddress\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transactionId\": \"string\",\n  \"authorizationCode\": \"string\",\n  \"status\": \"approved\",\n  \"responseCode\": \"string\",\n  \"responseMessage\": \"string\",\n  \"amount\": 9046.91589786026,\n  \"approvedAmount\": 6904.762296588002,\n  \"avsResponse\": \"string\",\n  \"cvvResponse\": \"string\",\n  \"timestamp\": \"1950-02-04T14:34:41.042Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "12986243-df4e-4a6a-a6c7-41d69d3fefbe",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "authorize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"<float>\",\n  \"currency\": \"USD\",\n  \"card\": {\n    \"cardNumber\": \"<string>\",\n    \"expirationDate\": \"<string>\",\n    \"cvv\": \"<string>\",\n    \"cardholderName\": \"<string>\",\n    \"billingAddress\": {\n      \"zip\": \"<string>\",\n      \"street\": \"<string>\"\n    }\n  },\n  \"merchantId\": \"<string>\",\n  \"orderId\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ipAddress\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"transactionId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "716039d9-3751-4998-8a27-04cfd53445e4",
+              "name": "Authentication required or invalid credentials",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "authorize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"<float>\",\n  \"currency\": \"USD\",\n  \"card\": {\n    \"cardNumber\": \"<string>\",\n    \"expirationDate\": \"<string>\",\n    \"cvv\": \"<string>\",\n    \"cardholderName\": \"<string>\",\n    \"billingAddress\": {\n      \"zip\": \"<string>\",\n      \"street\": \"<string>\"\n    }\n  },\n  \"merchantId\": \"<string>\",\n  \"orderId\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ipAddress\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"transactionId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "864ba430-f687-4861-98ed-9f42b71d78c3",
+          "name": "Process Sale",
+          "request": {
+            "name": "Process Sale",
+            "description": {
+              "content": "Process a combined authorization and capture (sale) transaction. Charges the card immediately for the full transaction amount.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "transactions",
+                "sale"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"<float>\",\n  \"currency\": \"USD\",\n  \"card\": {\n    \"cardNumber\": \"<string>\",\n    \"expirationDate\": \"<string>\",\n    \"cvv\": \"<string>\",\n    \"cardholderName\": \"<string>\",\n    \"billingAddress\": {\n      \"zip\": \"<string>\",\n      \"street\": \"<string>\"\n    }\n  },\n  \"merchantId\": \"<string>\",\n  \"captureImmediately\": true,\n  \"orderId\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ipAddress\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f819299d-0fbc-4368-bb3f-92bf13c396d2",
+              "name": "Sale response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "sale"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"<float>\",\n  \"currency\": \"USD\",\n  \"card\": {\n    \"cardNumber\": \"<string>\",\n    \"expirationDate\": \"<string>\",\n    \"cvv\": \"<string>\",\n    \"cardholderName\": \"<string>\",\n    \"billingAddress\": {\n      \"zip\": \"<string>\",\n      \"street\": \"<string>\"\n    }\n  },\n  \"merchantId\": \"<string>\",\n  \"captureImmediately\": true,\n  \"orderId\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ipAddress\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transactionId\": \"string\",\n  \"status\": \"string\",\n  \"responseCode\": \"string\",\n  \"responseMessage\": \"string\",\n  \"amount\": 6557.32731661603,\n  \"timestamp\": \"1997-06-11T08:48:59.176Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4f6c3544-7902-4135-95e9-5a6477ec5571",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "sale"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"<float>\",\n  \"currency\": \"USD\",\n  \"card\": {\n    \"cardNumber\": \"<string>\",\n    \"expirationDate\": \"<string>\",\n    \"cvv\": \"<string>\",\n    \"cardholderName\": \"<string>\",\n    \"billingAddress\": {\n      \"zip\": \"<string>\",\n      \"street\": \"<string>\"\n    }\n  },\n  \"merchantId\": \"<string>\",\n  \"captureImmediately\": true,\n  \"orderId\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ipAddress\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"transactionId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "062d0e9c-ce2b-4ba2-8c10-9cd29897a470",
+              "name": "Authentication required or invalid credentials",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "sale"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"<float>\",\n  \"currency\": \"USD\",\n  \"card\": {\n    \"cardNumber\": \"<string>\",\n    \"expirationDate\": \"<string>\",\n    \"cvv\": \"<string>\",\n    \"cardholderName\": \"<string>\",\n    \"billingAddress\": {\n      \"zip\": \"<string>\",\n      \"street\": \"<string>\"\n    }\n  },\n  \"merchantId\": \"<string>\",\n  \"captureImmediately\": true,\n  \"orderId\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ipAddress\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"transactionId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://issuing.api.tsys.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "691df7e9-5f32-4aaf-a463-4cdf88588b2a",
+    "name": "TSYS Issuing Platform Accounts Authorization API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.\n\nContact Support:\n Name: TSYS Developer Support",
+      "type": "text/plain"
+    }
+  }
+}
