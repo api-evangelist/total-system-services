@@ -6,6 +6,8 @@ apis:
   description: Cardholder account management
   humanURL: https://developers.tsys.com/
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -126,6 +128,8 @@ apis:
   description: Card transaction history
   humanURL: https://developers.tsys.com/
   tags:
+  - Transaction
+  tags_raw:
   - Transactions
   properties:
   - type: OpenAPI
@@ -176,6 +180,14 @@ common:
     url: json-ld/total-system-services-context.jsonld
 name: Total System Services
 tags:
+  - Payments
+  - Payment Processing
+  - Card Issuing
+  - Merchant Services
+  - Fintech
+  - Financial-Services
+  - Fortune 1000
+tags_raw:
   - Payments
   - Payment Processing
   - Card Issuing
