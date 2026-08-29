@@ -156,6 +156,9 @@ apis:
   - type: Documentation
     url: https://docs.tsysmerchant.com/
 common:
+  - type: CapabilityMap
+    url: capabilities/total-system-services-capability-edges.yml
+    name: Total System Services Business Capability Map
   - type: AgenticAccess
     url: agentic-access/total-system-services-agentic-access.yml
   - type: DomainSecurity

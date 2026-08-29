@@ -1,0 +1,104 @@
+slug: total-system-services
+provider: Total System Services
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Banking & Capital Markets
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 10
+edges:
+- tag: Authorization
+  spec_file: total-system-services-authorization-api-openapi.yml
+  capability_id: BC-1340.70
+  capability_id_l1: BC-1340
+  capability_name: Card Transaction Processing Management
+  confidence: 0.95
+  evidence: POST /transactions/authorize  authorizeTransaction; AuthorizationRequest, CardData
+  reason: Card transaction authorisation through a payment gateway is card transaction processing.
+- tag: Capture
+  spec_file: total-system-services-capture-api-openapi.yml
+  capability_id: BC-1340.70
+  capability_id_l1: BC-1340
+  capability_name: Card Transaction Processing Management
+  confidence: 0.9
+  evidence: POST /transactions/{transactionId}/capture  captureTransaction
+  reason: Capture of a previously authorised card transaction in the gateway — card transaction processing.
+- tag: Cards
+  spec_file: total-system-services-cards-api-openapi.yml
+  capability_id: BC-1340.60
+  capability_id_l1: BC-1340
+  capability_name: Card Issuance Management
+  confidence: 0.9
+  evidence: POST /cards/{cardId}/activate  activateCard; POST /cards/{cardId}/suspend  suspendCard; CardIssuanceRequest
+  reason: Card issuance, activation, suspension and spending controls on the issuing platform — card issuance
+    management.
+- tag: Refunds
+  spec_file: total-system-services-refunds-api-openapi.yml
+  capability_id: BC-1340.70
+  capability_id_l1: BC-1340
+  capability_name: Card Transaction Processing Management
+  confidence: 0.85
+  evidence: POST /transactions/{transactionId}/refund  refundTransaction
+  reason: Refund of a card transaction through the gateway — card transaction processing.
+- tag: Transactions
+  spec_file: total-system-services-transactions-api-openapi.yml
+  capability_id: BC-1340.70
+  capability_id_l1: BC-1340
+  capability_name: Card Transaction Processing Management
+  confidence: 0.85
+  evidence: POST /transactions/sale  processSale; POST /batches/current/close  closeCurrentBatch; List
+    Card Transactions
+  reason: Sale processing, transaction listing and batch close across gateway and issuing platforms —
+    card transaction processing and settlement batching.
+- tag: Voids
+  spec_file: total-system-services-voids-api-openapi.yml
+  capability_id: BC-1340.70
+  capability_id_l1: BC-1340
+  capability_name: Card Transaction Processing Management
+  confidence: 0.85
+  evidence: POST /transactions/{transactionId}/void  voidTransaction
+  reason: Voiding a card authorisation in the payment gateway — card transaction processing.
+- tag: Accounts
+  spec_file: total-system-services-accounts-api-openapi.yml
+  capability_id: BC-1340.60
+  capability_id_l1: BC-1340
+  capability_name: Card Issuance Management
+  confidence: 0.8
+  evidence: TSYS Issuing Platform API ... manage card programs, cardholder accounts, card issuance; POST
+    /accounts/{accountId}/cards  issueCard
+  reason: Cardholder account creation and card issuance on an issuing platform — card issuance management;
+    some overlap with deposit/account lifecycle but the issuing context is explicit.
+- tag: Disputes
+  spec_file: total-system-services-disputes-api-openapi.yml
+  capability_id: BC-1340.70
+  capability_id_l1: BC-1340
+  capability_name: Card Transaction Processing Management
+  confidence: 0.8
+  evidence: 'POST /disputes  createDispute; schemas: Dispute, DisputeRequest'
+  reason: Card dispute/chargeback creation on the issuing platform, explicitly part of card transaction
+    processing (chargebacks).
+- tag: Controls
+  spec_file: total-system-services-controls-api-openapi.yml
+  capability_id: BC-1340.60
+  capability_id_l1: BC-1340
+  capability_name: Card Issuance Management
+  confidence: 0.7
+  evidence: 'GET /cards/{cardId}/controls  getCardControls; schemas: SpendingControls'
+  reason: Per-card spending controls configuration on an issuing platform; sits within card issuance/servicing.
+    Could alternatively be product parameter configuration, so moderate confidence.
+- tag: Inquiries
+  spec_file: total-system-services-inquiries-api-openapi.yml
+  capability_id: BC-1340.70
+  capability_id_l1: BC-1340
+  capability_name: Card Transaction Processing Management
+  confidence: 0.7
+  evidence: GET /transactions/{transactionId}  getTransaction; TSYS Payment Gateway API for processing
+    credit, debit, and prepaid card transactions
+  reason: Transaction inquiry within the card payment gateway — read surface of card transaction processing;
+    thin single operation hence moderate confidence.
