@@ -68,6 +68,8 @@ apis:
   description: Spending controls and limits
   humanURL: https://developers.tsys.com/
   tags:
+  - Control
+  tags_raw:
   - Controls
   properties:
   - type: OpenAPI
