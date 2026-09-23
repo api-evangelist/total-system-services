@@ -1,16 +1,16 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: TSYS Issuing Platform Accounts Authorization API
-  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  title: TSYS Payment Gateway Authorization API
+  description: TSYS Payment Gateway API for processing credit, debit, and prepaid card transactions. Supports authorization, capture, void, refund, and inquiry operations for card-present (POS) and card-not-present (ecommerce) scenarios. Part of the Global Payments / TSYS payment processing platform.
   version: 1.0.0
   contact:
     name: TSYS Developer Support
-    url: https://www.tsys.com/platform
+    url: https://developers.tsys.com/
 servers:
-- url: https://issuing.api.tsys.com/v1
-  description: TSYS Issuing Platform Production API
+- url: https://api.tsys.com/v1
+  description: TSYS Payment Gateway Production API
 security:
-- bearerAuth: []
+- apiKeyAuth: []
 tags:
 - name: Authorization
   description: Authorize card payments
@@ -39,67 +39,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /transactions/sale:
-    post:
-      operationId: processSale
-      summary: Process Sale
-      description: Process a combined authorization and capture (sale) transaction. Charges the card immediately for the full transaction amount.
-      tags:
-      - Authorization
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SaleRequest'
-      responses:
-        '200':
-          description: Sale response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Authentication required or invalid credentials
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    CardData:
-      type: object
-      description: Card payment credentials
-      properties:
-        cardNumber:
-          type: string
-          description: Tokenized card number (PAN token)
-        expirationDate:
-          type: string
-          description: Card expiration date (MMYY format)
-        cvv:
-          type: string
-          description: Card verification value
-        cardholderName:
-          type: string
-        billingAddress:
-          type: object
-          properties:
-            zip:
-              type: string
-            street:
-              type: string
     AuthorizationRequest:
       type: object
       required:
@@ -129,31 +70,37 @@ components:
         ipAddress:
           type: string
           description: Customer IP address for fraud detection
-    TransactionResponse:
+    Error:
       type: object
       properties:
+        code:
+          type: string
+        message:
+          type: string
         transactionId:
           type: string
-        status:
-          type: string
-        responseCode:
-          type: string
-        responseMessage:
-          type: string
-        amount:
-          type: number
-          format: float
-        timestamp:
-          type: string
-          format: date-time
-    SaleRequest:
-      allOf:
-      - $ref: '#/components/schemas/AuthorizationRequest'
+    CardData:
       type: object
+      description: Card payment credentials
       properties:
-        captureImmediately:
-          type: boolean
-          default: true
+        cardNumber:
+          type: string
+          description: Tokenized card number (PAN token)
+        expirationDate:
+          type: string
+          description: Card expiration date (MMYY format)
+        cvv:
+          type: string
+          description: Card verification value
+        cardholderName:
+          type: string
+        billingAddress:
+          type: object
+          properties:
+            zip:
+              type: string
+            street:
+              type: string
     AuthorizationResponse:
       type: object
       properties:
@@ -187,17 +134,21 @@ components:
         timestamp:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        transactionId:
-          type: string
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-TSYS-API-Key

@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: TSYS Issuing Platform Accounts Disputes API
+  title: TSYS Issuing Platform Disputes API
   description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
   version: 1.0.0
   contact:
@@ -70,6 +70,21 @@ paths:
                 $ref: '#/components/schemas/Dispute'
 components:
   schemas:
+    DisputeRequest:
+      type: object
+      required:
+      - transactionId
+      - reason
+      properties:
+        transactionId:
+          type: string
+        reason:
+          type: string
+          description: Dispute reason description
+        amount:
+          type: number
+          format: float
+          description: Amount being disputed
     Dispute:
       type: object
       properties:
@@ -97,21 +112,6 @@ components:
         resolvedAt:
           type: string
           format: date-time
-    DisputeRequest:
-      type: object
-      required:
-      - transactionId
-      - reason
-      properties:
-        transactionId:
-          type: string
-        reason:
-          type: string
-          description: Dispute reason description
-        amount:
-          type: number
-          format: float
-          description: Amount being disputed
     DisputeList:
       type: object
       properties:

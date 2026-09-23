@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: TSYS Issuing Platform Accounts API
   description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
@@ -167,18 +167,6 @@ paths:
                 $ref: '#/components/schemas/Card'
 components:
   schemas:
-    AccountUpdate:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - active
-          - suspended
-          - closed
-        creditLimit:
-          type: number
-          format: float
     Cardholder:
       type: object
       properties:
@@ -207,39 +195,6 @@ components:
               type: string
             country:
               type: string
-    AccountInput:
-      type: object
-      required:
-      - cardholder
-      properties:
-        cardholder:
-          $ref: '#/components/schemas/Cardholder'
-        creditLimit:
-          type: number
-          format: float
-        currency:
-          type: string
-          default: USD
-    CardList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Card'
-    AccountList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
     CardIssuanceRequest:
       type: object
       required:
@@ -268,13 +223,6 @@ components:
               type: string
             zip:
               type: string
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
     Card:
       type: object
       properties:
@@ -310,6 +258,38 @@ components:
         activatedAt:
           type: string
           format: date-time
+    AccountList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    AccountUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - closed
+        creditLimit:
+          type: number
+          format: float
     Account:
       type: object
       properties:
@@ -336,15 +316,35 @@ components:
         createdAt:
           type: string
           format: date-time
+    CardList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+    AccountInput:
+      type: object
+      required:
+      - cardholder
+      properties:
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+          default: USD
   responses:
-    Unauthorized:
-      description: Authentication required
+    BadRequest:
+      description: Invalid request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid request
+    Unauthorized:
+      description: Authentication required
       content:
         application/json:
           schema:

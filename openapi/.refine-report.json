@@ -1,32 +1,42 @@
 {
   "provider": "total-system-services",
   "sources": [
-    "total-system-services-accounts-api-openapi.yml",
-    "total-system-services-authorization-api-openapi.yml",
-    "total-system-services-capture-api-openapi.yml",
-    "total-system-services-cards-api-openapi.yml",
-    "total-system-services-controls-api-openapi.yml",
-    "total-system-services-disputes-api-openapi.yml",
-    "total-system-services-inquiries-api-openapi.yml",
-    "total-system-services-refunds-api-openapi.yml",
-    "total-system-services-transactions-api-openapi.yml",
-    "total-system-services-voids-api-openapi.yml"
+    "_original/tsys-issuing-openapi.yml",
+    "_original/tsys-payment-gateway-openapi.yml"
   ],
   "outputs": [
     "total-system-services-accounts-api-openapi.yml",
-    "total-system-services-authorization-api-openapi.yml",
-    "total-system-services-capture-api-openapi.yml",
     "total-system-services-cards-api-openapi.yml",
     "total-system-services-controls-api-openapi.yml",
     "total-system-services-disputes-api-openapi.yml",
+    "total-system-services-transactions-api-openapi.yml",
+    "total-system-services-authorization-api-openapi.yml",
+    "total-system-services-capture-api-openapi.yml",
     "total-system-services-inquiries-api-openapi.yml",
     "total-system-services-refunds-api-openapi.yml",
-    "total-system-services-transactions-api-openapi.yml",
     "total-system-services-voids-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "tsys-issuing-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "tsys-payment-gateway-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "tsys-payment-gateway-openapi.yml: multi-axis tagging (6 tags, 6 first tags, 1.89x duplication over 9 operations) \u2014 split on first tag, 7 operations narrowed",
+    "tag 'Transactions' spans 2 source specs (tsys-issuing-openapi.yml, tsys-payment-gateway-openapi.yml): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "total-system-services-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "total-system-services-authorization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "total-system-services-capture-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "total-system-services-cards-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "total-system-services-controls-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "total-system-services-disputes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "total-system-services-inquiries-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "total-system-services-refunds-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "total-system-services-transactions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "total-system-services-voids-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

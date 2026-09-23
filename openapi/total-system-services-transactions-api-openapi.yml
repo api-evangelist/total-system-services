@@ -1,16 +1,13 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: TSYS Issuing Platform Accounts Transactions API
-  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  title: Total System Services Transactions API
   version: 1.0.0
-  contact:
-    name: TSYS Developer Support
-    url: https://www.tsys.com/platform
+  description: 'Operations tagged Transactions across 2 of this provider''s published API definitions: tsys-issuing-openapi.yml, tsys-payment-gateway-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://issuing.api.tsys.com/v1
   description: TSYS Issuing Platform Production API
-security:
-- bearerAuth: []
+- url: https://api.tsys.com/v1
+  description: TSYS Payment Gateway Production API
 tags:
 - name: Transactions
   description: Card transaction history
@@ -57,30 +54,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IssuingTransactionList'
-  /transactions/authorize:
-    post:
-      operationId: authorizeTransaction
-      summary: Authorize Transaction
-      description: Authorize a credit, debit, or prepaid card transaction without capturing. Returns an authorization code that can be used to capture the transaction later.
-      tags:
-      - Transactions
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AuthorizationRequest'
-      responses:
-        '200':
-          description: Authorization response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthorizationResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://issuing.api.tsys.com/v1
+      description: TSYS Issuing Platform Production API
   /transactions/sale:
     post:
       operationId: processSale
@@ -105,121 +83,11 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /transactions/{transactionId}/capture:
-    post:
-      operationId: captureTransaction
-      summary: Capture Transaction
-      description: Capture a previously authorized transaction for settlement.
-      tags:
-      - Transactions
-      parameters:
-      - name: transactionId
-        in: path
-        required: true
-        schema:
-          type: string
-        description: The transaction ID from the authorization response
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                amount:
-                  type: number
-                  format: float
-                  description: Amount to capture (must not exceed authorized amount)
-      responses:
-        '200':
-          description: Capture response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
-  /transactions/{transactionId}/void:
-    post:
-      operationId: voidTransaction
-      summary: Void Transaction
-      description: Void an authorized or captured transaction before settlement.
-      tags:
-      - Transactions
-      parameters:
-      - name: transactionId
-        in: path
-        required: true
-        schema:
-          type: string
-        description: The transaction ID to void
-      responses:
-        '200':
-          description: Void response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
-  /transactions/{transactionId}/refund:
-    post:
-      operationId: refundTransaction
-      summary: Refund Transaction
-      description: Process a full or partial refund for a settled transaction.
-      tags:
-      - Transactions
-      parameters:
-      - name: transactionId
-        in: path
-        required: true
-        schema:
-          type: string
-        description: The original transaction ID to refund
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                amount:
-                  type: number
-                  format: float
-                  description: Refund amount (partial or full)
-                reason:
-                  type: string
-                  description: Reason for the refund
-      responses:
-        '200':
-          description: Refund response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
-  /transactions/{transactionId}:
-    get:
-      operationId: getTransaction
-      summary: Get Transaction
-      description: Retrieve the status and details of a specific transaction.
-      tags:
-      - Transactions
-      parameters:
-      - name: transactionId
-        in: path
-        required: true
-        schema:
-          type: string
-        description: Transaction identifier
-      responses:
-        '200':
-          description: Transaction details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Transaction'
-        '404':
-          $ref: '#/components/responses/NotFound'
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.tsys.com/v1
+      description: TSYS Payment Gateway Production API
   /transactions:
     get:
       operationId: listTransactions
@@ -281,6 +149,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionList'
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.tsys.com/v1
+      description: TSYS Payment Gateway Production API
   /batches/current:
     get:
       operationId: getCurrentBatch
@@ -295,6 +168,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Batch'
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.tsys.com/v1
+      description: TSYS Payment Gateway Production API
   /batches/current/close:
     post:
       operationId: closeCurrentBatch
@@ -309,8 +187,106 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Batch'
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.tsys.com/v1
+      description: TSYS Payment Gateway Production API
 components:
   schemas:
+    IssuingTransactionList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssuingTransaction'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+    IssuingTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+        cardId:
+          type: string
+        type:
+          type: string
+          enum:
+          - purchase
+          - refund
+          - cash_advance
+          - fee
+        status:
+          type: string
+          enum:
+          - pending
+          - posted
+          - declined
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        merchantName:
+          type: string
+        merchantCategory:
+          type: string
+        merchantCity:
+          type: string
+        merchantCountry:
+          type: string
+        authorizedAt:
+          type: string
+          format: date-time
+        postedAt:
+          type: string
+          format: date-time
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        merchantId:
+          type: string
+        orderId:
+          type: string
+        status:
+          type: string
+          enum:
+          - authorized
+          - captured
+          - settled
+          - voided
+          - refunded
+          - declined
+        amount:
+          type: number
+          format: float
+        settledAmount:
+          type: number
+          format: float
+        currency:
+          type: string
+        cardType:
+          type: string
+        lastFour:
+          type: string
+          description: Last four digits of the card number
+        authorizationCode:
+          type: string
+        batchId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        settledAt:
+          type: string
+          format: date-time
     Batch:
       type: object
       properties:
@@ -341,41 +317,6 @@ components:
         closedAt:
           type: string
           format: date-time
-    IssuingTransactionList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssuingTransaction'
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-    CardData:
-      type: object
-      description: Card payment credentials
-      properties:
-        cardNumber:
-          type: string
-          description: Tokenized card number (PAN token)
-        expirationDate:
-          type: string
-          description: Card expiration date (MMYY format)
-        cvv:
-          type: string
-          description: Card verification value
-        cardholderName:
-          type: string
-        billingAddress:
-          type: object
-          properties:
-            zip:
-              type: string
-            street:
-              type: string
     TransactionList:
       type: object
       properties:
@@ -418,86 +359,37 @@ components:
         ipAddress:
           type: string
           description: Customer IP address for fraud detection
-    Transaction:
+    Error:
       type: object
       properties:
-        id:
+        code:
           type: string
-        merchantId:
+        message:
           type: string
-        orderId:
+        transactionId:
           type: string
-        status:
-          type: string
-          enum:
-          - authorized
-          - captured
-          - settled
-          - voided
-          - refunded
-          - declined
-        amount:
-          type: number
-          format: float
-        settledAmount:
-          type: number
-          format: float
-        currency:
-          type: string
-        cardType:
-          type: string
-        lastFour:
-          type: string
-          description: Last four digits of the card number
-        authorizationCode:
-          type: string
-        batchId:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        settledAt:
-          type: string
-          format: date-time
-    IssuingTransaction:
+    CardData:
       type: object
+      description: Card payment credentials
       properties:
-        id:
+        cardNumber:
           type: string
-        cardId:
+          description: Tokenized card number (PAN token)
+        expirationDate:
           type: string
-        type:
+          description: Card expiration date (MMYY format)
+        cvv:
           type: string
-          enum:
-          - purchase
-          - refund
-          - cash_advance
-          - fee
-        status:
+          description: Card verification value
+        cardholderName:
           type: string
-          enum:
-          - pending
-          - posted
-          - declined
-        amount:
-          type: number
-          format: float
-        currency:
-          type: string
-        merchantName:
-          type: string
-        merchantCategory:
-          type: string
-        merchantCity:
-          type: string
-        merchantCountry:
-          type: string
-        authorizedAt:
-          type: string
-          format: date-time
-        postedAt:
-          type: string
-          format: date-time
+        billingAddress:
+          type: object
+          properties:
+            zip:
+              type: string
+            street:
+              type: string
     TransactionResponse:
       type: object
       properties:
@@ -523,63 +415,15 @@ components:
         captureImmediately:
           type: boolean
           default: true
-    AuthorizationResponse:
-      type: object
-      properties:
-        transactionId:
-          type: string
-        authorizationCode:
-          type: string
-        status:
-          type: string
-          enum:
-          - approved
-          - declined
-          - partial
-          - error
-        responseCode:
-          type: string
-        responseMessage:
-          type: string
-        amount:
-          type: number
-          format: float
-        approvedAmount:
-          type: number
-          format: float
-        avsResponse:
-          type: string
-          description: Address verification response code
-        cvvResponse:
-          type: string
-          description: CVV match response code
-        timestamp:
-          type: string
-          format: date-time
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        transactionId:
-          type: string
   responses:
-    Unauthorized:
-      description: Authentication required or invalid credentials
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     BadRequest:
       description: Invalid request parameters
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
+    Unauthorized:
+      description: Authentication required or invalid credentials
       content:
         application/json:
           schema:
@@ -589,3 +433,10 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-TSYS-API-Key
+x-refined-from:
+- tsys-issuing-openapi.yml
+- tsys-payment-gateway-openapi.yml

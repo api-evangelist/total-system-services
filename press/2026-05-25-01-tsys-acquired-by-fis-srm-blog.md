@@ -1,7 +1,9 @@
 ---
 title: TSYS Acquired by FIS | SRM Blog
 url: https://srmcorp.com/fis-announces-acquisition-of-tsys-from-global-payments-a-strategic-pivot-to-reinforce-issuer-services/
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Total System Services" press release artificial intelligence'
 position: 1
 source: serpapi-google

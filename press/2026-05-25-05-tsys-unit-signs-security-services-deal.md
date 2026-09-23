@@ -1,7 +1,9 @@
 ---
 title: TSYS Unit Signs Security-Services Deal
 url: https://www.americanbanker.com/payments/news/tsys-unit-signs-security-services-deal
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Total System Services" press release artificial intelligence'
 position: 5
 source: serpapi-google

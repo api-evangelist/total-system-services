@@ -1,16 +1,16 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: TSYS Issuing Platform Accounts Refunds API
-  description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
+  title: TSYS Payment Gateway Refunds API
+  description: TSYS Payment Gateway API for processing credit, debit, and prepaid card transactions. Supports authorization, capture, void, refund, and inquiry operations for card-present (POS) and card-not-present (ecommerce) scenarios. Part of the Global Payments / TSYS payment processing platform.
   version: 1.0.0
   contact:
     name: TSYS Developer Support
-    url: https://www.tsys.com/platform
+    url: https://developers.tsys.com/
 servers:
-- url: https://issuing.api.tsys.com/v1
-  description: TSYS Issuing Platform Production API
+- url: https://api.tsys.com/v1
+  description: TSYS Payment Gateway Production API
 security:
-- bearerAuth: []
+- apiKeyAuth: []
 tags:
 - name: Refunds
   description: Process refunds and credits
@@ -53,6 +53,15 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
     TransactionResponse:
       type: object
       properties:
@@ -70,15 +79,6 @@ components:
         timestamp:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        transactionId:
-          type: string
   responses:
     NotFound:
       description: Resource not found
@@ -87,7 +87,7 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-TSYS-API-Key

@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: TSYS Issuing Platform Accounts Cards API
+  title: TSYS Issuing Platform Cards API
   description: TSYS Issuing Platform API for financial institutions and fintechs to manage card programs, cardholder accounts, card issuance, spending controls, and transaction history. Part of the Global Payments / TSYS API-driven payment stack.
   version: 1.0.0
   contact:
@@ -203,45 +203,6 @@ paths:
                 $ref: '#/components/schemas/SpendingControls'
 components:
   schemas:
-    SpendingControls:
-      type: object
-      properties:
-        dailyLimit:
-          type: number
-          format: float
-          description: Maximum spend per day
-        monthlyLimit:
-          type: number
-          format: float
-          description: Maximum spend per month
-        transactionLimit:
-          type: number
-          format: float
-          description: Maximum per transaction amount
-        allowedMerchantCategories:
-          type: array
-          items:
-            type: string
-          description: Allowed MCC codes (empty = all allowed)
-        blockedMerchantCategories:
-          type: array
-          items:
-            type: string
-          description: Blocked MCC codes
-        allowedCountries:
-          type: array
-          items:
-            type: string
-          description: ISO 3166-1 alpha-2 country codes
-        internationalEnabled:
-          type: boolean
-          default: false
-        onlineEnabled:
-          type: boolean
-          default: true
-        atmEnabled:
-          type: boolean
-          default: true
     IssuingTransactionList:
       type: object
       properties:
@@ -255,52 +216,6 @@ components:
           type: integer
         limit:
           type: integer
-    IssuingTransaction:
-      type: object
-      properties:
-        id:
-          type: string
-        cardId:
-          type: string
-        type:
-          type: string
-          enum:
-          - purchase
-          - refund
-          - cash_advance
-          - fee
-        status:
-          type: string
-          enum:
-          - pending
-          - posted
-          - declined
-        amount:
-          type: number
-          format: float
-        currency:
-          type: string
-        merchantName:
-          type: string
-        merchantCategory:
-          type: string
-        merchantCity:
-          type: string
-        merchantCountry:
-          type: string
-        authorizedAt:
-          type: string
-          format: date-time
-        postedAt:
-          type: string
-          format: date-time
-    CardList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Card'
     CardIssuanceRequest:
       type: object
       required:
@@ -371,6 +286,91 @@ components:
           type: string
         message:
           type: string
+    IssuingTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+        cardId:
+          type: string
+        type:
+          type: string
+          enum:
+          - purchase
+          - refund
+          - cash_advance
+          - fee
+        status:
+          type: string
+          enum:
+          - pending
+          - posted
+          - declined
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        merchantName:
+          type: string
+        merchantCategory:
+          type: string
+        merchantCity:
+          type: string
+        merchantCountry:
+          type: string
+        authorizedAt:
+          type: string
+          format: date-time
+        postedAt:
+          type: string
+          format: date-time
+    CardList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+    SpendingControls:
+      type: object
+      properties:
+        dailyLimit:
+          type: number
+          format: float
+          description: Maximum spend per day
+        monthlyLimit:
+          type: number
+          format: float
+          description: Maximum spend per month
+        transactionLimit:
+          type: number
+          format: float
+          description: Maximum per transaction amount
+        allowedMerchantCategories:
+          type: array
+          items:
+            type: string
+          description: Allowed MCC codes (empty = all allowed)
+        blockedMerchantCategories:
+          type: array
+          items:
+            type: string
+          description: Blocked MCC codes
+        allowedCountries:
+          type: array
+          items:
+            type: string
+          description: ISO 3166-1 alpha-2 country codes
+        internationalEnabled:
+          type: boolean
+          default: false
+        onlineEnabled:
+          type: boolean
+          default: true
+        atmEnabled:
+          type: boolean
+          default: true
   responses:
     NotFound:
       description: Resource not found
