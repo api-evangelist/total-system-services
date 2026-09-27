@@ -246,6 +246,56 @@ components:
         postedAt:
           type: string
           format: date-time
+    AuthorizationRequest:
+      type: object
+      required:
+      - amount
+      - currency
+      - card
+      - merchantId
+      properties:
+        merchantId:
+          type: string
+          description: TSYS merchant ID
+        amount:
+          type: number
+          format: float
+          description: Transaction amount
+        currency:
+          type: string
+          default: USD
+          description: ISO 4217 currency code
+        card:
+          $ref: '#/components/schemas/CardData'
+        orderId:
+          type: string
+          description: Merchant-assigned order identifier
+        description:
+          type: string
+        ipAddress:
+          type: string
+          description: Customer IP address for fraud detection
+    SaleRequest:
+      allOf:
+      - $ref: '#/components/schemas/AuthorizationRequest'
+      type: object
+      properties:
+        captureImmediately:
+          type: boolean
+          default: true
+    TransactionList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
     Transaction:
       type: object
       properties:
@@ -317,57 +367,6 @@ components:
         closedAt:
           type: string
           format: date-time
-    TransactionList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Transaction'
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-    AuthorizationRequest:
-      type: object
-      required:
-      - amount
-      - currency
-      - card
-      - merchantId
-      properties:
-        merchantId:
-          type: string
-          description: TSYS merchant ID
-        amount:
-          type: number
-          format: float
-          description: Transaction amount
-        currency:
-          type: string
-          default: USD
-          description: ISO 4217 currency code
-        card:
-          $ref: '#/components/schemas/CardData'
-        orderId:
-          type: string
-          description: Merchant-assigned order identifier
-        description:
-          type: string
-        ipAddress:
-          type: string
-          description: Customer IP address for fraud detection
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        transactionId:
-          type: string
     CardData:
       type: object
       description: Card payment credentials
@@ -407,23 +406,24 @@ components:
         timestamp:
           type: string
           format: date-time
-    SaleRequest:
-      allOf:
-      - $ref: '#/components/schemas/AuthorizationRequest'
+    Error:
       type: object
       properties:
-        captureImmediately:
-          type: boolean
-          default: true
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
   responses:
-    BadRequest:
-      description: Invalid request parameters
+    Unauthorized:
+      description: Authentication required or invalid credentials
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Authentication required or invalid credentials
+    BadRequest:
+      description: Invalid request parameters
       content:
         application/json:
           schema:

@@ -190,7 +190,7 @@ tags:
   - Card Issuing
   - Merchant Services
   - Fintech
-  - Financial-Services
+  - Financial Services
   - Fortune 1000
 tags_raw:
   - Payments
@@ -200,6 +200,7 @@ tags_raw:
   - Fintech
   - Financial Services
   - Fortune 1000
+  - Financial-Services
 type: Index
 deliveryModel:
   model: unknown

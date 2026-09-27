@@ -70,21 +70,6 @@ paths:
                 $ref: '#/components/schemas/Dispute'
 components:
   schemas:
-    DisputeRequest:
-      type: object
-      required:
-      - transactionId
-      - reason
-      properties:
-        transactionId:
-          type: string
-        reason:
-          type: string
-          description: Dispute reason description
-        amount:
-          type: number
-          format: float
-          description: Amount being disputed
     Dispute:
       type: object
       properties:
@@ -112,6 +97,21 @@ components:
         resolvedAt:
           type: string
           format: date-time
+    DisputeRequest:
+      type: object
+      required:
+      - transactionId
+      - reason
+      properties:
+        transactionId:
+          type: string
+        reason:
+          type: string
+          description: Dispute reason description
+        amount:
+          type: number
+          format: float
+          description: Amount being disputed
     DisputeList:
       type: object
       properties:
