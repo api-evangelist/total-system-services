@@ -167,6 +167,112 @@ paths:
                 $ref: '#/components/schemas/Card'
 components:
   schemas:
+    AccountList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    AccountInput:
+      type: object
+      required:
+      - cardholder
+      properties:
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+          default: USD
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        programId:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - closed
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        availableBalance:
+          type: number
+          format: float
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    CardIssuanceRequest:
+      type: object
+      required:
+      - type
+      - network
+      properties:
+        type:
+          type: string
+          enum:
+          - physical
+          - virtual
+        network:
+          type: string
+          enum:
+          - visa
+          - mastercard
+        shippingAddress:
+          type: object
+          description: Required for physical cards
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zip:
+              type: string
+    AccountUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - closed
+        creditLimit:
+          type: number
+          format: float
+    CardList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
     Card:
       type: object
       properties:
@@ -202,59 +308,6 @@ components:
         activatedAt:
           type: string
           format: date-time
-    AccountList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-    AccountUpdate:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - active
-          - suspended
-          - closed
-        creditLimit:
-          type: number
-          format: float
-    CardIssuanceRequest:
-      type: object
-      required:
-      - type
-      - network
-      properties:
-        type:
-          type: string
-          enum:
-          - physical
-          - virtual
-        network:
-          type: string
-          enum:
-          - visa
-          - mastercard
-        shippingAddress:
-          type: object
-          description: Required for physical cards
-          properties:
-            street:
-              type: string
-            city:
-              type: string
-            state:
-              type: string
-            zip:
-              type: string
     Cardholder:
       type: object
       properties:
@@ -283,62 +336,9 @@ components:
               type: string
             country:
               type: string
-    Account:
-      type: object
-      properties:
-        id:
-          type: string
-        programId:
-          type: string
-        status:
-          type: string
-          enum:
-          - active
-          - suspended
-          - closed
-        cardholder:
-          $ref: '#/components/schemas/Cardholder'
-        availableBalance:
-          type: number
-          format: float
-        creditLimit:
-          type: number
-          format: float
-        currency:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-    AccountInput:
-      type: object
-      required:
-      - cardholder
-      properties:
-        cardholder:
-          $ref: '#/components/schemas/Cardholder'
-        creditLimit:
-          type: number
-          format: float
-        currency:
-          type: string
-          default: USD
-    CardList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Card'
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
   responses:
-    Unauthorized:
-      description: Authentication required
+    NotFound:
+      description: Resource not found
       content:
         application/json:
           schema:
@@ -349,8 +349,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
+    Unauthorized:
+      description: Authentication required
       content:
         application/json:
           schema:

@@ -70,6 +70,37 @@ components:
         ipAddress:
           type: string
           description: Customer IP address for fraud detection
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
+    CardData:
+      type: object
+      description: Card payment credentials
+      properties:
+        cardNumber:
+          type: string
+          description: Tokenized card number (PAN token)
+        expirationDate:
+          type: string
+          description: Card expiration date (MMYY format)
+        cvv:
+          type: string
+          description: Card verification value
+        cardholderName:
+          type: string
+        billingAddress:
+          type: object
+          properties:
+            zip:
+              type: string
+            street:
+              type: string
     AuthorizationResponse:
       type: object
       properties:
@@ -103,46 +134,15 @@ components:
         timestamp:
           type: string
           format: date-time
-    CardData:
-      type: object
-      description: Card payment credentials
-      properties:
-        cardNumber:
-          type: string
-          description: Tokenized card number (PAN token)
-        expirationDate:
-          type: string
-          description: Card expiration date (MMYY format)
-        cvv:
-          type: string
-          description: Card verification value
-        cardholderName:
-          type: string
-        billingAddress:
-          type: object
-          properties:
-            zip:
-              type: string
-            street:
-              type: string
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        transactionId:
-          type: string
   responses:
-    Unauthorized:
-      description: Authentication required or invalid credentials
+    BadRequest:
+      description: Invalid request parameters
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid request parameters
+    Unauthorized:
+      description: Authentication required or invalid credentials
       content:
         application/json:
           schema:

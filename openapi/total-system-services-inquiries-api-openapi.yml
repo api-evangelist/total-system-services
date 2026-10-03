@@ -40,6 +40,15 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
     Transaction:
       type: object
       properties:
@@ -81,15 +90,6 @@ components:
         settledAt:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        transactionId:
-          type: string
   responses:
     NotFound:
       description: Resource not found

@@ -275,27 +275,6 @@ components:
         ipAddress:
           type: string
           description: Customer IP address for fraud detection
-    SaleRequest:
-      allOf:
-      - $ref: '#/components/schemas/AuthorizationRequest'
-      type: object
-      properties:
-        captureImmediately:
-          type: boolean
-          default: true
-    TransactionList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Transaction'
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
     Transaction:
       type: object
       properties:
@@ -337,6 +316,45 @@ components:
         settledAt:
           type: string
           format: date-time
+    SaleRequest:
+      allOf:
+      - $ref: '#/components/schemas/AuthorizationRequest'
+      type: object
+      properties:
+        captureImmediately:
+          type: boolean
+          default: true
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
+    CardData:
+      type: object
+      description: Card payment credentials
+      properties:
+        cardNumber:
+          type: string
+          description: Tokenized card number (PAN token)
+        expirationDate:
+          type: string
+          description: Card expiration date (MMYY format)
+        cvv:
+          type: string
+          description: Card verification value
+        cardholderName:
+          type: string
+        billingAddress:
+          type: object
+          properties:
+            zip:
+              type: string
+            street:
+              type: string
     Batch:
       type: object
       properties:
@@ -367,28 +385,6 @@ components:
         closedAt:
           type: string
           format: date-time
-    CardData:
-      type: object
-      description: Card payment credentials
-      properties:
-        cardNumber:
-          type: string
-          description: Tokenized card number (PAN token)
-        expirationDate:
-          type: string
-          description: Card expiration date (MMYY format)
-        cvv:
-          type: string
-          description: Card verification value
-        cardholderName:
-          type: string
-        billingAddress:
-          type: object
-          properties:
-            zip:
-              type: string
-            street:
-              type: string
     TransactionResponse:
       type: object
       properties:
@@ -406,24 +402,28 @@ components:
         timestamp:
           type: string
           format: date-time
-    Error:
+    TransactionList:
       type: object
       properties:
-        code:
-          type: string
-        message:
-          type: string
-        transactionId:
-          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
   responses:
-    Unauthorized:
-      description: Authentication required or invalid credentials
+    BadRequest:
+      description: Invalid request parameters
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid request parameters
+    Unauthorized:
+      description: Authentication required or invalid credentials
       content:
         application/json:
           schema:

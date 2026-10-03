@@ -57,6 +57,15 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        transactionId:
+          type: string
     TransactionResponse:
       type: object
       properties:
@@ -74,15 +83,6 @@ components:
         timestamp:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        transactionId:
-          type: string
   securitySchemes:
     apiKeyAuth:
       type: apiKey
