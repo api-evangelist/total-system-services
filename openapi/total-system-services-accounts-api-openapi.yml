@@ -167,6 +167,19 @@ paths:
                 $ref: '#/components/schemas/Card'
 components:
   schemas:
+    AccountInput:
+      type: object
+      required:
+      - cardholder
+      properties:
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+          default: USD
     AccountList:
       type: object
       properties:
@@ -187,45 +200,53 @@ components:
           type: string
         message:
           type: string
-    AccountInput:
-      type: object
-      required:
-      - cardholder
-      properties:
-        cardholder:
-          $ref: '#/components/schemas/Cardholder'
-        creditLimit:
-          type: number
-          format: float
-        currency:
-          type: string
-          default: USD
-    Account:
+    CardList:
       type: object
       properties:
-        id:
-          type: string
-        programId:
-          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+    AccountUpdate:
+      type: object
+      properties:
         status:
           type: string
           enum:
           - active
           - suspended
           - closed
-        cardholder:
-          $ref: '#/components/schemas/Cardholder'
-        availableBalance:
-          type: number
-          format: float
         creditLimit:
           type: number
           format: float
-        currency:
+    Cardholder:
+      type: object
+      properties:
+        firstName:
           type: string
-        createdAt:
+        lastName:
           type: string
-          format: date-time
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        address:
+          type: object
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zip:
+              type: string
+            country:
+              type: string
     CardIssuanceRequest:
       type: object
       required:
@@ -254,25 +275,32 @@ components:
               type: string
             zip:
               type: string
-    AccountUpdate:
+    Account:
       type: object
       properties:
+        id:
+          type: string
+        programId:
+          type: string
         status:
           type: string
           enum:
           - active
           - suspended
           - closed
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        availableBalance:
+          type: number
+          format: float
         creditLimit:
           type: number
           format: float
-    CardList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Card'
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
     Card:
       type: object
       properties:
@@ -308,35 +336,13 @@ components:
         activatedAt:
           type: string
           format: date-time
-    Cardholder:
-      type: object
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-          format: email
-        phone:
-          type: string
-        dateOfBirth:
-          type: string
-          format: date
-        address:
-          type: object
-          properties:
-            street:
-              type: string
-            city:
-              type: string
-            state:
-              type: string
-            zip:
-              type: string
-            country:
-              type: string
   responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     NotFound:
       description: Resource not found
       content:
@@ -345,12 +351,6 @@ components:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Authentication required
       content:
         application/json:
           schema:

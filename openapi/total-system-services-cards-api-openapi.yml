@@ -203,6 +203,19 @@ paths:
                 $ref: '#/components/schemas/SpendingControls'
 components:
   schemas:
+    IssuingTransactionList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssuingTransaction'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
     IssuingTransaction:
       type: object
       properties:
@@ -249,34 +262,6 @@ components:
           type: string
         message:
           type: string
-    CardIssuanceRequest:
-      type: object
-      required:
-      - type
-      - network
-      properties:
-        type:
-          type: string
-          enum:
-          - physical
-          - virtual
-        network:
-          type: string
-          enum:
-          - visa
-          - mastercard
-        shippingAddress:
-          type: object
-          description: Required for physical cards
-          properties:
-            street:
-              type: string
-            city:
-              type: string
-            state:
-              type: string
-            zip:
-              type: string
     CardList:
       type: object
       properties:
@@ -284,54 +269,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Card'
-    IssuingTransactionList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssuingTransaction'
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
-    Card:
-      type: object
-      properties:
-        id:
-          type: string
-        accountId:
-          type: string
-        type:
-          type: string
-          enum:
-          - physical
-          - virtual
-        status:
-          type: string
-          enum:
-          - pending
-          - active
-          - suspended
-          - expired
-          - cancelled
-        lastFour:
-          type: string
-        network:
-          type: string
-          enum:
-          - visa
-          - mastercard
-        expirationDate:
-          type: string
-        issuedAt:
-          type: string
-          format: date-time
-        activatedAt:
-          type: string
-          format: date-time
     SpendingControls:
       type: object
       properties:
@@ -371,6 +308,69 @@ components:
         atmEnabled:
           type: boolean
           default: true
+    CardIssuanceRequest:
+      type: object
+      required:
+      - type
+      - network
+      properties:
+        type:
+          type: string
+          enum:
+          - physical
+          - virtual
+        network:
+          type: string
+          enum:
+          - visa
+          - mastercard
+        shippingAddress:
+          type: object
+          description: Required for physical cards
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zip:
+              type: string
+    Card:
+      type: object
+      properties:
+        id:
+          type: string
+        accountId:
+          type: string
+        type:
+          type: string
+          enum:
+          - physical
+          - virtual
+        status:
+          type: string
+          enum:
+          - pending
+          - active
+          - suspended
+          - expired
+          - cancelled
+        lastFour:
+          type: string
+        network:
+          type: string
+          enum:
+          - visa
+          - mastercard
+        expirationDate:
+          type: string
+        issuedAt:
+          type: string
+          format: date-time
+        activatedAt:
+          type: string
+          format: date-time
   responses:
     NotFound:
       description: Resource not found
