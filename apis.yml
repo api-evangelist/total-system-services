@@ -158,6 +158,8 @@ apis:
   - type: Documentation
     url: https://docs.tsysmerchant.com/
 common:
+  - url: https://www.fisglobal.com/insights
+    type: Blog
   - type: CapabilityMap
     url: capabilities/total-system-services-capability-edges.yml
     name: Total System Services Business Capability Map
@@ -230,7 +232,7 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/total-system-services.png
 access: 3rd-Party
 created: '2026-03-24'
-modified: '2026-05-19'
+modified: '2026-10-06'
 position: Consuming
 description: >-
   Total System Services (TSYS) was a leading global payment solutions provider offering payment processing services to
