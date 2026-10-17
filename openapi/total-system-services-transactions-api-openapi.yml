@@ -194,19 +194,6 @@ paths:
       description: TSYS Payment Gateway Production API
 components:
   schemas:
-    IssuingTransactionList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssuingTransaction'
-        total:
-          type: integer
-        page:
-          type: integer
-        limit:
-          type: integer
     IssuingTransaction:
       type: object
       properties:
@@ -246,74 +233,19 @@ components:
         postedAt:
           type: string
           format: date-time
-    CardData:
-      type: object
-      description: Card payment credentials
-      properties:
-        cardNumber:
-          type: string
-          description: Tokenized card number (PAN token)
-        expirationDate:
-          type: string
-          description: Card expiration date (MMYY format)
-        cvv:
-          type: string
-          description: Card verification value
-        cardholderName:
-          type: string
-        billingAddress:
-          type: object
-          properties:
-            zip:
-              type: string
-            street:
-              type: string
-    AuthorizationRequest:
-      type: object
-      required:
-      - amount
-      - currency
-      - card
-      - merchantId
-      properties:
-        merchantId:
-          type: string
-          description: TSYS merchant ID
-        amount:
-          type: number
-          format: float
-          description: Transaction amount
-        currency:
-          type: string
-          default: USD
-          description: ISO 4217 currency code
-        card:
-          $ref: '#/components/schemas/CardData'
-        orderId:
-          type: string
-          description: Merchant-assigned order identifier
-        description:
-          type: string
-        ipAddress:
-          type: string
-          description: Customer IP address for fraud detection
-    TransactionResponse:
+    IssuingTransactionList:
       type: object
       properties:
-        transactionId:
-          type: string
-        status:
-          type: string
-        responseCode:
-          type: string
-        responseMessage:
-          type: string
-        amount:
-          type: number
-          format: float
-        timestamp:
-          type: string
-          format: date-time
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssuingTransaction'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
     Error:
       type: object
       properties:
@@ -353,6 +285,60 @@ components:
         closedAt:
           type: string
           format: date-time
+    TransactionResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+        responseCode:
+          type: string
+        responseMessage:
+          type: string
+        amount:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+    SaleRequest:
+      allOf:
+      - $ref: '#/components/schemas/AuthorizationRequest'
+      type: object
+      properties:
+        captureImmediately:
+          type: boolean
+          default: true
+    AuthorizationRequest:
+      type: object
+      required:
+      - amount
+      - currency
+      - card
+      - merchantId
+      properties:
+        merchantId:
+          type: string
+          description: TSYS merchant ID
+        amount:
+          type: number
+          format: float
+          description: Transaction amount
+        currency:
+          type: string
+          default: USD
+          description: ISO 4217 currency code
+        card:
+          $ref: '#/components/schemas/CardData'
+        orderId:
+          type: string
+          description: Merchant-assigned order identifier
+        description:
+          type: string
+        ipAddress:
+          type: string
+          description: Customer IP address for fraud detection
     TransactionList:
       type: object
       properties:
@@ -366,6 +352,28 @@ components:
           type: integer
         limit:
           type: integer
+    CardData:
+      type: object
+      description: Card payment credentials
+      properties:
+        cardNumber:
+          type: string
+          description: Tokenized card number (PAN token)
+        expirationDate:
+          type: string
+          description: Card expiration date (MMYY format)
+        cvv:
+          type: string
+          description: Card verification value
+        cardholderName:
+          type: string
+        billingAddress:
+          type: object
+          properties:
+            zip:
+              type: string
+            street:
+              type: string
     Transaction:
       type: object
       properties:
@@ -407,14 +415,6 @@ components:
         settledAt:
           type: string
           format: date-time
-    SaleRequest:
-      allOf:
-      - $ref: '#/components/schemas/AuthorizationRequest'
-      type: object
-      properties:
-        captureImmediately:
-          type: boolean
-          default: true
   responses:
     Unauthorized:
       description: Authentication required or invalid credentials

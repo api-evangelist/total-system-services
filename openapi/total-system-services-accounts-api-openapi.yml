@@ -167,19 +167,13 @@ paths:
                 $ref: '#/components/schemas/Card'
 components:
   schemas:
-    AccountInput:
+    Error:
       type: object
-      required:
-      - cardholder
       properties:
-        cardholder:
-          $ref: '#/components/schemas/Cardholder'
-        creditLimit:
-          type: number
-          format: float
-        currency:
+        code:
           type: string
-          default: USD
+        message:
+          type: string
     AccountList:
       type: object
       properties:
@@ -193,32 +187,6 @@ components:
           type: integer
         limit:
           type: integer
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-    CardList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Card'
-    AccountUpdate:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - active
-          - suspended
-          - closed
-        creditLimit:
-          type: number
-          format: float
     Cardholder:
       type: object
       properties:
@@ -247,6 +215,64 @@ components:
               type: string
             country:
               type: string
+    AccountInput:
+      type: object
+      required:
+      - cardholder
+      properties:
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+          default: USD
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        programId:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - closed
+        cardholder:
+          $ref: '#/components/schemas/Cardholder'
+        availableBalance:
+          type: number
+          format: float
+        creditLimit:
+          type: number
+          format: float
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    CardList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+    AccountUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - active
+          - suspended
+          - closed
+        creditLimit:
+          type: number
+          format: float
     CardIssuanceRequest:
       type: object
       required:
@@ -275,32 +301,6 @@ components:
               type: string
             zip:
               type: string
-    Account:
-      type: object
-      properties:
-        id:
-          type: string
-        programId:
-          type: string
-        status:
-          type: string
-          enum:
-          - active
-          - suspended
-          - closed
-        cardholder:
-          $ref: '#/components/schemas/Cardholder'
-        availableBalance:
-          type: number
-          format: float
-        creditLimit:
-          type: number
-          format: float
-        currency:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
     Card:
       type: object
       properties:
@@ -337,12 +337,6 @@ components:
           type: string
           format: date-time
   responses:
-    Unauthorized:
-      description: Authentication required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     NotFound:
       description: Resource not found
       content:
@@ -351,6 +345,12 @@ components:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required
       content:
         application/json:
           schema:

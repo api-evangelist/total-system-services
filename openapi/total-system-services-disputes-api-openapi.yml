@@ -70,6 +70,33 @@ paths:
                 $ref: '#/components/schemas/Dispute'
 components:
   schemas:
+    Dispute:
+      type: object
+      properties:
+        id:
+          type: string
+        transactionId:
+          type: string
+        cardId:
+          type: string
+        status:
+          type: string
+          enum:
+          - open
+          - pending
+          - resolved
+          - closed
+        reason:
+          type: string
+        amount:
+          type: number
+          format: float
+        filedAt:
+          type: string
+          format: date-time
+        resolvedAt:
+          type: string
+          format: date-time
     DisputeList:
       type: object
       properties:
@@ -98,33 +125,6 @@ components:
           type: number
           format: float
           description: Amount being disputed
-    Dispute:
-      type: object
-      properties:
-        id:
-          type: string
-        transactionId:
-          type: string
-        cardId:
-          type: string
-        status:
-          type: string
-          enum:
-          - open
-          - pending
-          - resolved
-          - closed
-        reason:
-          type: string
-        amount:
-          type: number
-          format: float
-        filedAt:
-          type: string
-          format: date-time
-        resolvedAt:
-          type: string
-          format: date-time
   securitySchemes:
     bearerAuth:
       type: http
